@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_color"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ToolbarTheme" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="@dimen/scroll_padding"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/layout_padding"
+                tools:ignore="UselessParent">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/card_top_margin"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="@dimen/corner_radius"
+                    app:cardElevation="@dimen/card_elevation">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/card_padding"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+                            <TextView
+                                android:id="@+id/tvGender"
+                                style="@style/AppTheme.fontstylesRegular"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/gender"
+                                android:textColor="@color/txt_black"
+                                android:textDirection="locale"
+                                android:textSize="@dimen/font_size_18" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1">
+
+                                <Spinner
+                                    android:id="@+id/genderSp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/custom_selector_down_blue"
+                                    android:textSize="@dimen/font_size_15" />
+
+                                <ImageView
+                                    android:id="@+id/imageDown"
+                                    android:layout_width="@dimen/dropdown_size"
+                                    android:layout_height="@dimen/dropdown_size"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
+                                    android:contentDescription="@string/todo"
+                                    android:src="@drawable/ic_arrow_drop_down_black_24dp" />
+                            </RelativeLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="15dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+                            <TextView
+                                android:id="@+id/tvHeight"
+                                style="@style/AppTheme.fontstylesRegular"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/height"
+                                android:textColor="@color/txt_black"
+                                android:textDirection="locale"
+                                android:textSize="@dimen/font_size_18" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1">
+
+                                <Spinner
+                                    android:id="@+id/heightSp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/custom_selector_down_blue"
+                                    android:textSize="@dimen/font_size_15" />
+
+                                <ImageView
+                                    android:layout_width="@dimen/dropdown_size"
+                                    android:layout_height="@dimen/dropdown_size"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
+                                    android:contentDescription="@string/todo"
+                                    android:src="@drawable/ic_arrow_drop_down_black_24dp" />
+                            </RelativeLayout>
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="5dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/hint_top_margin"
+                                android:layout_weight="1"
+                                android:textColorHint="@color/colorAccent">
+
+                                <EditText
+                                    android:id="@+id/edHeight"
+                                    style="@style/AppTheme.fontstylesRegular"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:ems="10"
+                                    android:gravity="start"
+                                    android:hint="@string/enter_value"
+                                    android:inputType="number"
+                                    android:textColor="@color/primary"
+                                    android:textColorHint="@color/colorAccent"
+                                    android:textDirection="locale"
+                                    android:textSize="@dimen/font_size_15"
+                                    tools:ignore="Autofill" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <TextView
+                                android:id="@+id/tvcm"
+                                style="@style/AppTheme.fontstylesRegular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_marginStart="5dp"
+                                android:layout_marginEnd="5dp"
+                                android:gravity="center"
+                                android:text="@string/cm"
+                                android:textAllCaps="true"
+                                android:textColor="@color/txt_black"
+                                android:textSize="@dimen/font_size_15" />
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/tvInputHeight2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/hint_top_margin"
+                                android:layout_weight="1"
+                                android:textColorHint="@color/colorAccent">
+
+                                <EditText
+                                    android:id="@+id/edHeight2"
+                                    style="@style/AppTheme.fontstylesRegular"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:ems="10"
+                                    android:gravity="start"
+                                    android:hint="@string/enter_value"
+                                    android:inputType="number"
+                                    android:textColor="@color/primary"
+                                    android:textDirection="locale"
+                                    android:textSize="@dimen/font_size_15"
+                                    tools:ignore="Autofill" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <TextView
+                                android:id="@+id/tvin"
+                                style="@style/AppTheme.fontstylesRegular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_marginStart="5dp"
+                                android:layout_marginEnd="5dp"
+                                android:gravity="center"
+                                android:text="@string/in"
+                                android:textAllCaps="true"
+                                android:textColor="@color/txt_black"
+                                android:textSize="@dimen/font_size_15" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/card_top_margin"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="@dimen/corner_radius"
+                    app:cardElevation="@dimen/card_elevation">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/card_padding"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="15dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+                            <TextView
+                                android:id="@+id/tvWeight"
+                                style="@style/AppTheme.fontstylesRegular"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/weight"
+                                android:textColor="@color/txt_black"
+                                android:textDirection="locale"
+                                android:textSize="@dimen/font_size_18" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1">
+
+                                <Spinner
+                                    android:id="@+id/weightSp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/custom_selector_down_blue"
+                                    android:textSize="@dimen/font_size_15" />
+
+                                <ImageView
+                                    android:layout_width="@dimen/dropdown_size"
+                                    android:layout_height="@dimen/dropdown_size"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
+                                    android:contentDescription="@string/todo"
+                                    android:src="@drawable/ic_arrow_drop_down_black_24dp" />
+                            </RelativeLayout>
+
+
+                        </LinearLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/hint_top_margin"
+                            android:textColorHint="@color/colorAccent">
+
+
+                            <EditText
+                                android:id="@+id/edWeight"
+                                style="@style/AppTheme.fontstylesRegular"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:ems="10"
+                                android:gravity="start"
+                                android:hint="@string/enter_value"
+                                android:inputType="number"
+                                android:textColor="@color/primary"
+                                android:textColorHint="@color/colorAccent"
+                                android:textDirection="locale"
+                                android:textSize="@dimen/font_size_15"
+                                tools:ignore="Autofill" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="0dp"
+                    android:weightSum="2">
+
+                    <Button
+                        android:id="@+id/calc"
+                        style="@style/AppTheme.fontstylesRegular"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/edittextstyle_blue"
+                        android:padding="5dp"
+                        android:text="@string/calculate"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/font_size_15" />
+
+                    <Button
+                        android:id="@+id/reset"
+                        style="@style/AppTheme.fontstylesRegular"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/edittextstyle_blue"
+                        android:padding="5dp"
+                        android:text="@string/reset"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/font_size_15" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/adview_height"
+        app:adSize="SMART_BANNER"
+        app:adUnitId="@string/banner_ad_id" />
+</LinearLayout>

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "513799225458",
+    "firebase_url": "https://villanovacovid19.firebaseio.com",
+    "project_id": "villanovacovid19",
+    "storage_bucket": "villanovacovid19.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:513799225458:android:029b3aee8a8fac2a8bc2eb",
+        "android_client_info": {
+          "package_name": "com.w2njl.VillanovaCovid19"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "513799225458-bp2j54r76lhinsn3pn1fkao79ruc1m86.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.w2njl.VillanovaCovid19",
+            "certificate_hash": "c376f80c6f1409cc33148888816fc24a6031ab62"
+          }
+        },
+        {
+          "client_id": "513799225458-ingj1ceiu47iup58jb99clelghg6e2c3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfh7MxBnGzn5sS7jwngnHCnId1n9sQ2LA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "513799225458-ingj1ceiu47iup58jb99clelghg6e2c3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

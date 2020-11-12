@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".util.RISArchiveActivity">
+
+
+
+
+<com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/mAppBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.124">
+
+
+
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
+            android:theme="@style/ToolbarTheme"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:id="@+id/img_back"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/todo"
+                    android:scaleX="-1"
+                    android:src="@drawable/arrow_orange" />
+
+
+                <TextView
+                    android:id="@+id/text_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="@font/popind_regular"
+                    android:gravity="center_vertical"
+                    android:includeFontPadding="false"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:text="@string/covid_assessment"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:layout_width="500dp"
+        android:layout_height="70dp"
+        android:layout_below="@+id/mAppBarLayout"
+        android:id="@+id/tabLayout"
+
+        >
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Day"
+            android:id="@+id/dayTab"
+
+
+            />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Month"
+            android:id="@+id/monthTab"
+
+
+            />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Year"
+            android:id="@+id/yearTab"
+
+
+            />
+
+    </com.google.android.material.tabs.TabLayout>
+    
+    <androidx.viewpager.widget.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tabLayout"
+        android:id="@+id/viewPager"/>
+
+
+<!--  <LinearLayout-->
+<!--      android:layout_width="match_parent"-->
+<!--      android:layout_height="match_parent"-->
+<!--      android:orientation="vertical"-->
+<!--      android:gravity="center"-->
+<!--      android:paddingTop="0dp"-->
+<!--      android:paddingBottom="50dp"-->
+<!--      android:layout_below="@id/tabLayout"-->
+<!--      >-->
+
+
+
+
+
+
+<!--      <TextView-->
+<!--          android:id="@+id/risHeader"-->
+<!--          android:layout_width="wrap_content"-->
+<!--          android:layout_height="wrap_content"-->
+<!--          android:layout_gravity="center"-->
+
+<!--          android:text="RIS data for today's date"-->
+<!--          android:textStyle="bold" />-->
+
+
+
+<!--      <TableLayout-->
+<!--          android:layout_width="match_parent"-->
+<!--          android:layout_height="wrap_content"-->
+<!--          android:background="#939FDA">-->
+<!--          <TableRow>-->
+
+<!--              <TextView-->
+<!--                  android:id="@+id/risTableHeader"-->
+<!--                  android:layout_width="wrap_content"-->
+<!--                  android:layout_height="wrap_content"-->
+<!--                  android:layout_weight="1"-->
+<!--                  android:fontFamily="sans-serif"-->
+<!--                  android:gravity="center"-->
+<!--                  android:text="RIS"-->
+<!--                  android:textSize="18sp" />-->
+<!--              <TextView-->
+<!--                  android:id="@+id/hrTableHeader"-->
+<!--                  android:layout_width="wrap_content"-->
+<!--                  android:layout_height="wrap_content"-->
+<!--                  android:text="HR"-->
+<!--                  android:layout_weight="1"-->
+<!--                  android:gravity="center"-->
+<!--                  android:textSize="18sp"/>-->
+<!--              <TextView-->
+<!--                  android:id="@+id/o2TableHeader"-->
+<!--                  android:layout_width="wrap_content"-->
+<!--                  android:layout_height="wrap_content"-->
+<!--                  android:text="spO2"-->
+<!--                  android:layout_weight="1"-->
+<!--                  android:gravity="center"-->
+<!--                  android:textSize="18sp"/>-->
+<!--          </TableRow>-->
+<!--          <TableRow>-->
+
+<!--              <TextView-->
+<!--                  android:id="@+id/risTableData"-->
+<!--                  android:layout_width="wrap_content"-->
+<!--                  android:layout_height="wrap_content"-->
+<!--                  android:layout_weight="1"-->
+<!--                  android:fontFamily="sans-serif"-->
+<!--                  android:gravity="center"-->
+<!--                  android:text="0"-->
+<!--                  android:textSize="18sp"-->
+<!--                  android:textStyle="bold" />-->
+
+<!--              <TextView-->
+<!--                  android:id="@+id/HRTableData"-->
+<!--                  android:layout_width="wrap_content"-->
+<!--                  android:layout_height="wrap_content"-->
+<!--                  android:layout_weight="1"-->
+<!--                  android:gravity="center"-->
+<!--                  android:text="0"-->
+<!--                  android:textSize="18sp"-->
+<!--                  android:textStyle="bold" />-->
+
+<!--              <TextView-->
+<!--                  android:id="@+id/spO2TableData"-->
+<!--                  android:layout_width="wrap_content"-->
+<!--                  android:layout_height="wrap_content"-->
+<!--                  android:layout_weight="1"-->
+<!--                  android:gravity="center"-->
+<!--                  android:text="0"-->
+<!--                  android:textSize="18sp"-->
+<!--                  android:textStyle="bold" />-->
+<!--          </TableRow>-->
+<!--          <TableRow-->
+<!--              android:paddingTop="20dp"-->
+<!--              >-->
+<!--              <TextView-->
+<!--                  android:id="@+id/tempTableHeader"-->
+<!--                  android:layout_width="wrap_content"-->
+<!--                  android:layout_height="wrap_content"-->
+<!--                  android:text="Temperature"-->
+<!--                  android:layout_weight="1"-->
+<!--                  android:gravity="center"-->
+<!--                  android:textSize="18sp"/>-->
+<!--              <TextView-->
+<!--                  android:id="@+id/RRTableHeader"-->
+<!--                  android:layout_width="wrap_content"-->
+<!--                  android:layout_height="wrap_content"-->
+<!--                  android:text="RR"-->
+<!--                  android:layout_weight="1"-->
+<!--                  android:gravity="center"-->
+<!--                  android:textSize="18sp"/>-->
+<!--              <TextView-->
+<!--                  android:id="@+id/MVTableHeader"-->
+<!--                  android:layout_width="wrap_content"-->
+<!--                  android:layout_height="wrap_content"-->
+<!--                  android:text="MV"-->
+<!--                  android:layout_weight="1"-->
+<!--                  android:gravity="center"-->
+<!--                  android:textSize="18sp"/>-->
+<!--          </TableRow>-->
+<!--          <TableRow>-->
+<!--              <TextView-->
+<!--                  android:id="@+id/tempTableData"-->
+<!--                  android:layout_width="wrap_content"-->
+<!--                  android:layout_height="wrap_content"-->
+<!--                  android:layout_weight="1"-->
+<!--                  android:fontFamily="sans-serif"-->
+<!--                  android:gravity="center"-->
+<!--                  android:text="0"-->
+<!--                  android:textSize="18sp"-->
+<!--                  android:textStyle="bold" />-->
+
+<!--              <TextView-->
+<!--                  android:id="@+id/RRTableData"-->
+<!--                  android:layout_width="wrap_content"-->
+<!--                  android:layout_height="wrap_content"-->
+<!--                  android:layout_weight="1"-->
+<!--                  android:gravity="center"-->
+<!--                  android:text="0"-->
+<!--                  android:textSize="18sp"-->
+<!--                  android:textStyle="bold" />-->
+
+<!--              <TextView-->
+<!--                  android:id="@+id/MVTableData"-->
+<!--                  android:layout_width="wrap_content"-->
+<!--                  android:layout_height="wrap_content"-->
+<!--                  android:layout_weight="1"-->
+<!--                  android:gravity="center"-->
+<!--                  android:text="0"-->
+<!--                  android:textSize="18sp"-->
+<!--                  android:textStyle="bold" />-->
+<!--          </TableRow>-->
+
+
+<!--      </TableLayout>-->
+
+<!--      <com.jjoe64.graphview.GraphView-->
+<!--          android:id="@+id/graph"-->
+<!--          android:layout_width="match_parent"-->
+<!--          android:layout_height="250dp"-->
+<!--          android:layout_marginTop="50dp"-->
+<!--          app:layout_constraintEnd_toStartOf="@+id/guideline"-->
+<!--          app:layout_constraintStart_toStartOf="parent"-->
+<!--          app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--  </LinearLayout>-->
+
+</RelativeLayout>
