@@ -339,6 +339,10 @@
     <string name="settingsheader">COVID-19 RIS Monitoring Settings</string>
     <string name="slider_desc">Change RIS sample interval</string>
     <string name="action_settings">Settings</string>
+    <string name="byday">By Day</string>
+    <string name="byweek">By Week</string>
+    <string name="bymonth">By Month</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

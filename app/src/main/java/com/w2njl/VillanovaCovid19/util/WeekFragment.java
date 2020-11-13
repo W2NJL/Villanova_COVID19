@@ -1,40 +1,27 @@
 package com.w2njl.VillanovaCovid19.util;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ImageView;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.material.badge.BadgeDrawable;
-import com.google.android.material.tabs.TabItem;
-import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
-import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.w2njl.VillanovaCovid19.R;
@@ -45,126 +32,104 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
-public class RISWeekArchiveActivity extends AppCompatActivity {
-    private static final String TAG = null;
-    Toolbar toolbar;
-    public static ViewPager viewPager;
+import static android.content.ContentValues.TAG;
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link WeekFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+@RequiresApi(api = Build.VERSION_CODES.O)
+public class WeekFragment extends Fragment {
+
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
     DatabaseReference reff;
     private static CovidFeatures patient1 = new CovidFeatures();
     TextView risTableData, tempTableData, O2TableData, RRTableData, TVTableData, HRTableData, risHeader;
     LocalDate currentDate;
-    LocalDate aWeekAgo;
-    TabLayout tabLayout;
-    TabItem weekTab, monthTab, yearTab;
-    WeekFragment weekFragment;
-    Week2Fragment week2Fragment;
-    Week3Fragment week3Fragment;
-    Week4Fragment week4Fragment;
-    Week5Fragment week5Fragment;
-    Week6Fragment week6Fragment;
-    Week7Fragment week7Fragment;
-    MonthFragment monthFragment;
-    YearFragment yearFragment;
-    ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 
+
+    public WeekFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment WeekFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static WeekFragment newInstance(String param1, String param2) {
+        WeekFragment fragment = new WeekFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onResume() {
+        initDB();
+        super.onResume();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void init(View view) {
+        risTableData = view.findViewById(R.id.risTableData);
+        tempTableData = view.findViewById(R.id.tempTableData);
+        O2TableData = view.findViewById(R.id.spO2TableData);
+        RRTableData = view.findViewById(R.id.RRTableData);
+        TVTableData = view.findViewById(R.id.MVTableData);
+        HRTableData = view.findViewById(R.id.HRTableData);
+        risHeader = view.findViewById(R.id.risHeader);
+
+
+        currentDate = LocalDate.now();
+        LocalDate weekToday = currentDate.minusWeeks(1).plusDays(1);
+        Month m = weekToday.getMonth();
+        String month = m.toString();
+        month = month.substring(0, 1) + month.substring(1).toLowerCase();
+        int d = weekToday.getDayOfMonth();
+        int year = weekToday.getYear();
+        risHeader.setText("RIS data for the week of "  + month + " " +  String.valueOf(d) + ", " + String.valueOf(year));
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setTheme(R.style.BlueTheme);
-        setContentView(R.layout.activity_r_i_s_archive);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_day, container, false);
+        init(view);
 
-
-        init();
-
-//        initDB();
-
-
-
-        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-
-
-        for(int i=0; i<7; i++){
-
-            fragName(i);
-
-        }
-
-
-
-//        BadgeDrawable badgeDrawable = tabLayout.getTabAt(0).getOrCreateBadge();
-//        badgeDrawable.setVisible(true);
-
-
+        return view;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void fragName(int i) {
-
-        currentDate = LocalDate.now().minusDays(7*i);
-        aWeekAgo = LocalDate.now().minusWeeks(i+1).plusDays(1);
-        Month m = currentDate.getMonth();
-        int monthNum = currentDate.getMonthValue();
-        int monthNumWeekAgo = aWeekAgo.getMonthValue();
-        String month = m.toString();
-        month = month.substring(0, 1) + month.substring(1).toLowerCase();
-        int d = currentDate.getDayOfMonth();
-        int dAWeekAgo = aWeekAgo.getDayOfMonth();
-        int year = currentDate.getYear();
-        int yearAWeekAgo = aWeekAgo.getYear();
-
-
-
-
-
-        String title = monthNumWeekAgo + "/" + dAWeekAgo + "/" + yearAWeekAgo + " - " + monthNum + "/" + d + "/" + year;
-        switch(i){
-            case 0:
-                viewPagerAdapter.addFragment(weekFragment, title);
-
-                break;
-            case 1:
-                viewPagerAdapter.addFragment(week2Fragment, title);
-
-                break;
-            case 2:
-                viewPagerAdapter.addFragment(week3Fragment, title);
-
-                break;
-            case 3:
-                viewPagerAdapter.addFragment(week4Fragment, title);
-
-                break;
-            case 4:
-                viewPagerAdapter.addFragment(week5Fragment, title);
-
-                break;
-            case 5:
-                viewPagerAdapter.addFragment(week6Fragment, title);
-
-                break;
-            case 6:
-                viewPagerAdapter.addFragment(week7Fragment, title);
-
-                break;
-            default:
-                break;
-        }
-
-
-        viewPager.setAdapter(viewPagerAdapter);
-    }
-
-    private void initDB() {
+    private void initDB()
+    {
         reff = FirebaseDatabase.getInstance().getReference().child("Patient");
 
         reff.addValueEventListener(new ValueEventListener() {
@@ -173,7 +138,8 @@ public class RISWeekArchiveActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String date;
                 LocalDate now;
-                LocalDate toweek = LocalDate.now();
+                LocalDate today = LocalDate.now();
+                LocalDate weekToday = currentDate.minusWeeks(1).plusDays(1);
                 int risSum = 0;
                 int HRSum = 0;
                 int O2Sum = 0;
@@ -181,7 +147,7 @@ public class RISWeekArchiveActivity extends AppCompatActivity {
                 int RRSum = 0;
                 double tempSum = 0.0;
                 int count = 0;
-
+                double[][] risArray = new double[7][7];
 
 
                 for (DataSnapshot snapshot2 : snapshot.getChildren()) {
@@ -189,21 +155,23 @@ public class RISWeekArchiveActivity extends AppCompatActivity {
                     date = date.substring(0, date.indexOf('T'));
                     now = LocalDate.parse(date);
 
-                    if (now.equals(toweek)){
+
+                    if (today.compareTo(now) >= 0 && now.compareTo(weekToday) > 0) {
                         risSum = risSum + snapshot2.child("ris").getValue(Integer.class);
                         HRSum = HRSum + snapshot2.child("hr").getValue(Integer.class);
                         O2Sum = O2Sum + snapshot2.child("spO2").getValue(Integer.class);
                         TVSum = TVSum + snapshot2.child("tv").getValue(Integer.class);
                         RRSum = RRSum + snapshot2.child("rr").getValue(Integer.class);
                         tempSum = tempSum + snapshot2.child("temp").getValue(Double.class);
-                        count++;}
+
+                        count++;
+                    }
                 }
 
-                if(count==0){
-                    Toast.makeText(RISWeekArchiveActivity.this, "There is no data available for toweek", Toast.LENGTH_SHORT).show();
-                }
+                if (count == 0) {
 
-                else {
+                    Toast.makeText(getActivity().getBaseContext(), "There is no data available for today folks", Toast.LENGTH_SHORT).show();
+                } else {
                     risTableData.setText(String.valueOf(risSum / count));
                     tempTableData.setText(String.valueOf(Precision.round(tempSum / count, 1)) + "°F");
                     O2TableData.setText(String.valueOf(O2Sum / count) + "%");
@@ -211,9 +179,9 @@ public class RISWeekArchiveActivity extends AppCompatActivity {
                     TVTableData.setText(String.valueOf(TVSum / count));
                     HRTableData.setText(String.valueOf(HRSum / count) + " bpm");
 
-                    GraphView graph = (GraphView) findViewById(R.id.graph);
+                    GraphView graph = (GraphView) getView().findViewById(R.id.graph);
 
-                    graph.setTitle("RIS values by hour");
+                    graph.setTitle("RIS values by day");
 
                     graph.getViewport().setYAxisBoundsManual(true);
                     graph.getViewport().setMinY(-50);
@@ -222,11 +190,8 @@ public class RISWeekArchiveActivity extends AppCompatActivity {
 
                     graph.getViewport().setXAxisBoundsManual(true);
                     graph.getViewport().setMinX(0);
-                    graph.getViewport().setMaxX(24);
+                    graph.getViewport().setMaxX(7);
 
-                    StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
-                    staticLabelsFormatter.setHorizontalLabels(new String[] {"12AM", "5AM", "10AM", "5PM", "10PM"});
-                    graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
                     LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
                     series.setTitle("Filtered data");
@@ -239,6 +204,7 @@ public class RISWeekArchiveActivity extends AppCompatActivity {
                     double time;
                     String temp;
 
+                    series.resetData(new DataPoint[] {});
                     for (DataSnapshot snapshot2 : snapshot.getChildren()) {
                         date = snapshot2.child("currentTime").getValue(String.class);
                         date = date.substring(0, date.indexOf('Z'));
@@ -249,42 +215,53 @@ public class RISWeekArchiveActivity extends AppCompatActivity {
                         minute = lt.getMinute();
 
 
-                        if (minute >=0 && minute <10) {
+                        if (minute >= 0 && minute < 10) {
                             temp = hour + ".0" + minute;
-                        }
-                        else
+                        } else
                             temp = hour + "." + minute;
 
 
                         time = Double.parseDouble(temp);
 
 
+                        for (int i = 0; i < 7; i++) {
+                            if (now.equals(today.minusDays(i))) {
+                                risArray[i][0] = risArray[i][0] + snapshot2.child("ris").getValue(Integer.class);
+
+                                risArray[i][1]++;
+
+//                            point = new DataPoint(time, snapshot2.child("ris").getValue(Integer.class));
+//                            series.appendData(point, true, 1440);
+                            }
 
 
-                        if (now.equals(toweek)){
-                            risSum = risSum + snapshot2.child("ris").getValue(Integer.class);
-                            HRSum = HRSum + snapshot2.child("hr").getValue(Integer.class);
-                            O2Sum = O2Sum + snapshot2.child("spO2").getValue(Integer.class);
-                            TVSum = TVSum + snapshot2.child("tv").getValue(Integer.class);
-                            RRSum = RRSum + snapshot2.child("rr").getValue(Integer.class);
-                            tempSum = tempSum + snapshot2.child("temp").getValue(Double.class);
-                            Log.d(TAG, "onDataChange: " + time);
-
-
-                            point = new DataPoint(time, snapshot2.child("ris").getValue(Integer.class));
-                            series.appendData(point, true, 1440);
                         }
 
 
-                    }
 
-                    graph.addSeries(series);
-
+//
 
 
 //                    graph.getLegendRenderer().setVisible(true);
 //                    graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
-                }
+                    }
+                    int counter = 0;
+                    for(int i=6; i>0; i--){
+
+                        point = new DataPoint(counter, risArray[i][0]/risArray[i][1]);
+                        series.appendData(point, true, 1440);
+                        Log.d(TAG, "onDataChange: dumb " + i);
+                        counter++;
+
+                    }
+
+                    graph.addSeries(series);
+                    Log.d(TAG, "risArray Day 1 sum: " + risArray[0][0]);
+                    Log.d(TAG, "risArray Day 1 count: " + risArray[0][1]);
+                    Log.d(TAG, "risArray Day 2 sum: " + risArray[1][0]);
+                    Log.d(TAG, "risArray Day 2 count: " + risArray[1][1]);
+                    Log.d(TAG, "risArray Day 3 sum: " + risArray[2][0]);
+                    Log.d(TAG, "risArray Day 3 count: " + risArray[2][1]);
 
 //                    txtRR.setText(String.valueOf(sum));
 
@@ -345,13 +322,16 @@ public class RISWeekArchiveActivity extends AppCompatActivity {
 //                series.setValuesOnTopColor(Color.RED);
 //                series2.setDrawValuesOnTop(true);
 //                series2.setValuesOnTopColor(Color.RED);
-                reff.removeEventListener(this);
+                    reff.removeEventListener(this);
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
+
+
         });
 
 
@@ -363,7 +343,7 @@ public class RISWeekArchiveActivity extends AppCompatActivity {
 ////                    CovidFeatures covid2 = RISUtils.getPatient1();
 //                String date;
 //                LocalDate now;
-//                LocalDate toweek = LocalDate.now();
+//                LocalDate today = LocalDate.now();
 //                int risSum = 0;
 //                int HRSum = 0;
 //                int O2Sum = 0;
@@ -379,7 +359,7 @@ public class RISWeekArchiveActivity extends AppCompatActivity {
 //                   date = date.substring(0, date.indexOf('T'));
 //                    now = LocalDate.parse(date);
 //
-//                    if (now.equals(toweek)){
+//                    if (now.equals(today)){
 //                        risSum = risSum + snapshot2.child("ris").getValue(Integer.class);
 //                    HRSum = HRSum + snapshot2.child("hr").getValue(Integer.class);
 //                    O2Sum = O2Sum + snapshot2.child("spO2").getValue(Integer.class);
@@ -390,7 +370,7 @@ public class RISWeekArchiveActivity extends AppCompatActivity {
 //                }
 //
 //                if(count==0){
-//                    Toast.makeText(RISArchiveActivity.this, "There is no data available for toweek", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(RISArchiveActivity.this, "There is no data available for today", Toast.LENGTH_SHORT).show();
 //                }
 //
 //                else {
@@ -445,7 +425,7 @@ public class RISWeekArchiveActivity extends AppCompatActivity {
 //
 //
 //
-//                        if (now.equals(toweek)){
+//                        if (now.equals(today)){
 //                            risSum = risSum + snapshot2.child("ris").getValue(Integer.class);
 //                            HRSum = HRSum + snapshot2.child("hr").getValue(Integer.class);
 //                            O2Sum = O2Sum + snapshot2.child("spO2").getValue(Integer.class);
@@ -537,87 +517,5 @@ public class RISWeekArchiveActivity extends AppCompatActivity {
 //            }
 //        });
 
-
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void init() {
-
-
-//        risTableData = findViewById(R.id.risTableData);
-//        tempTableData = findViewById(R.id.tempTableData);
-//        O2TableData = findViewById(R.id.spO2TableData);
-//        RRTableData = findViewById(R.id.RRTableData);
-//        TVTableData = findViewById(R.id.MVTableData);
-//        HRTableData = findViewById(R.id.HRTableData);
-//        risHeader = findViewById(R.id.risHeader);
-        toolbar = findViewById(R.id.toolbar);
-        tabLayout = findViewById(R.id.tabLayout);
-                monthTab = findViewById(R.id.monthTab);
-        yearTab = findViewById(R.id.yearTab);
-        viewPager = findViewById(R.id.viewPager);
-        weekFragment = new WeekFragment();
-        monthFragment = new MonthFragment();
-        yearFragment = new YearFragment();
-        week2Fragment = new Week2Fragment();
-        week3Fragment = new Week3Fragment();
-        week4Fragment = new Week4Fragment();
-        week5Fragment = new Week5Fragment();
-        week6Fragment = new Week6Fragment();
-        week7Fragment = new Week7Fragment();
-
-//        currentDate = LocalDate.now();
-//        Month m = currentDate.getMonth();
-//        String month = m.toString();
-//        month = month.substring(0, 1) + month.substring(1).toLowerCase();
-//        int d = currentDate.getWeekOfMonth();
-//        int year = currentDate.getYear();
-//        risHeader.setText("RIS data for "  + month + " " +  String.valueOf(d) + ", " + String.valueOf(year));
-
-        setSupportActionBar(toolbar);
-        setTitle(null);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(false);
-        TextView text_title = findViewById(R.id.text_title);
-        text_title.setText(getResources().getString(R.string.covid_assessment));
-        ImageView img_back = findViewById(R.id.img_back);
-        img_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-
-    }
-
-    private class ViewPagerAdapter extends FragmentPagerAdapter {
-
-        private List<Fragment> fragments = new ArrayList<>();
-        private List<String> fragmentTitle = new ArrayList<>();
-
-        public ViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
-            super(fm, behavior);
-        }
-
-        public void addFragment(Fragment fragment, String title){
-            fragments.add(fragment);
-            fragmentTitle.add(title);
-        }
-
-        @NonNull
-        @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragments.size();
-        }
-
-        @Nullable
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return fragmentTitle.get(position);
-        }
     }
 }

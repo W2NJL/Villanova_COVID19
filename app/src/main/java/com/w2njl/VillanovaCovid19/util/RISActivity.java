@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.transition.Slide;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -62,7 +64,7 @@ import java.util.concurrent.TimeUnit;
 import static com.w2njl.VillanovaCovid19.CovidService.running;
 import static com.w2njl.VillanovaCovid19.CovidService.serviceTime;
 
-public class RISActivity extends AppCompatActivity {
+public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener  {
 
     private static final String TAG = "RISActivity";
     public static final String RIS_ID_KEY = "risId";
@@ -227,10 +229,14 @@ public class RISActivity extends AppCompatActivity {
         btnArchive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(RISActivity.this, RISArchiveActivity.class);
-                startActivity(intent);
+                PopupMenu popup = new PopupMenu(RISActivity.this, view);
+                popup.setOnMenuItemClickListener(RISActivity.this);
+                popup.inflate(R.menu.menu_archive);
+                popup.show();
             }
         });
+
+
 
 
 
@@ -945,6 +951,26 @@ exec.shutdown();
         stopService(mIntent);
     }
 
+
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.dayMenu:
+                intent = new Intent(RISActivity.this, RISArchiveActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.weekMenu:
+                intent = new Intent(RISActivity.this, RISWeekArchiveActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                intent = new Intent(RISActivity.this, RISArchiveActivity.class);
+                startActivity(intent);
+                return false;
+        }
+    }
 
 }
 
