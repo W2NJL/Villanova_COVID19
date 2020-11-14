@@ -194,10 +194,10 @@ public class DayFragment extends Fragment {
                     graph.getViewport().setXAxisBoundsManual(true);
                     graph.getViewport().setMinX(0);
                     graph.getViewport().setMaxX(24);
-
-                    StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
-                    staticLabelsFormatter.setHorizontalLabels(new String[]{"12AM", "5AM", "10AM", "5PM", "10PM"});
-                    graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
+//
+//                    StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
+//                    staticLabelsFormatter.setHorizontalLabels(new String[]{String.valueOf(12)+"AM", String.valueOf(5)+"AM", String.valueOf(10)+"AM", String.valueOf(5)+"PM", String.valueOf(10)+"PM"});
+//                    graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
                     LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
                     series.setTitle("Filtered data");

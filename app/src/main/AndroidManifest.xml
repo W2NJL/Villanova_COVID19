@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/villanovanew2_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".util.RISWeekArchiveActivity"></activity>
+        <activity android:name=".util.RISMonthArchiveActivity"></activity>
+        <activity android:name=".util.RISWeekArchiveActivity" />
         <activity android:name=".RISMonthActivity" />
         <activity
             android:name=".util.SettingsActivity"

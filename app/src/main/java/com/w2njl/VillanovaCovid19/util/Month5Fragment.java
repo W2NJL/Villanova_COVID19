@@ -21,7 +21,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.w2njl.VillanovaCovid19.R;
@@ -33,29 +32,28 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Week7Fragment#newInstance} factory method to
+ * Use the {@link Month5Fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Week7Fragment extends Fragment {
+public class Month5Fragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "";
+
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
     DatabaseReference reff;
     private static CovidFeatures patient1 = new CovidFeatures();
     TextView risTableData, tempTableData, O2TableData, RRTableData, TVTableData, HRTableData, risHeader;
     LocalDate currentDate;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public Week7Fragment() {
+    public Month5Fragment() {
         // Required empty public constructor
     }
 
@@ -65,11 +63,11 @@ public class Week7Fragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Week7Fragment.
+     * @return A new instance of fragment Month5Fragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static Week7Fragment newInstance(String param1, String param2) {
-        Week7Fragment fragment = new Week7Fragment();
+    public static Month5Fragment newInstance(String param1, String param2) {
+        Month5Fragment fragment = new Month5Fragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -106,12 +104,12 @@ public class Week7Fragment extends Fragment {
 
         currentDate = LocalDate.now();
         LocalDate weekToday = currentDate.minusWeeks(7).plusDays(1);
-        Month m = weekToday.getMonth();
+        Month m = currentDate.minusMonths(4).getMonth();
         String month = m.toString();
         month = month.substring(0, 1) + month.substring(1).toLowerCase();
         int d = weekToday.getDayOfMonth();
-        int year = weekToday.getYear();
-        risHeader.setText("RIS data for the week of " + month + " " + String.valueOf(d) + ", " + String.valueOf(year));
+        int year = currentDate.getYear();
+        risHeader.setText("RIS data for " + month + " " + String.valueOf(year));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -134,8 +132,7 @@ public class Week7Fragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String date;
                 LocalDate now;
-                LocalDate today = currentDate.minusWeeks(6);
-                LocalDate weekToday = currentDate.minusWeeks(7).plusDays(1);
+                LocalDate today = currentDate.minusMonths(4);
                 int risSum = 0;
                 int HRSum = 0;
                 int O2Sum = 0;
@@ -144,6 +141,11 @@ public class Week7Fragment extends Fragment {
                 double tempSum = 0.0;
                 int count = 0;
                 double[][] risArray = new double[7][7];
+                LocalDate curMonth = LocalDate.of(currentDate.minusMonths(4).getYear(), currentDate.minusMonths(4).getMonth(), 1);
+                LocalDate rollingMonth;
+                LocalDate weekToday;
+
+                Log.d(TAG, "onDataChange: test");
 
 
                 for (DataSnapshot snapshot2 : snapshot.getChildren()) {
@@ -152,7 +154,7 @@ public class Week7Fragment extends Fragment {
                     now = LocalDate.parse(date);
 
 
-                    if (today.compareTo(now) >= 0 && now.compareTo(weekToday) > 0) {
+                    if (today.getMonth().equals(now.getMonth())) {
                         risSum = risSum + snapshot2.child("ris").getValue(Integer.class);
                         HRSum = HRSum + snapshot2.child("hr").getValue(Integer.class);
                         O2Sum = O2Sum + snapshot2.child("spO2").getValue(Integer.class);
@@ -161,6 +163,24 @@ public class Week7Fragment extends Fragment {
                         tempSum = tempSum + snapshot2.child("temp").getValue(Double.class);
 
                         count++;
+
+                        for (int i = 0; i < 5; i++) {
+                            rollingMonth = curMonth.plusWeeks(i);
+                            weekToday = rollingMonth.plusWeeks(1).minusDays(1);
+                            Log.d(TAG, "onDataChange: Yeehaw " + rollingMonth.getMonth() + " " + rollingMonth.getDayOfMonth() + " " + weekToday.getMonthValue() + "/" + weekToday.getDayOfMonth());
+
+                            if (rollingMonth.compareTo(now) <= 0 && now.compareTo(weekToday) < 0) {
+                                risArray[i][0] = risArray[i][0] + snapshot2.child("ris").getValue(Integer.class);
+                                Log.d(TAG, "onDataChange: Yeehaw " + rollingMonth.getDayOfMonth() + " " + now.getMonthValue() + "/" + now.getDayOfMonth());
+                                risArray[i][1]++;
+
+
+//                            point = new DataPoint(time, snapshot2.child("ris").getValue(Integer.class));
+//                            series.appendData(point, true, 1440);
+                            }
+
+
+                        }
                     }
                 }
 
@@ -177,7 +197,7 @@ public class Week7Fragment extends Fragment {
 
                     GraphView graph = (GraphView) getView().findViewById(R.id.graph);
 
-                    graph.setTitle("RIS values by day");
+                    graph.setTitle("RIS values by week");
 
                     graph.getViewport().setYAxisBoundsManual(true);
                     graph.getViewport().setMinY(-50);
@@ -186,11 +206,11 @@ public class Week7Fragment extends Fragment {
 
                     graph.getViewport().setXAxisBoundsManual(true);
                     graph.getViewport().setMinX(0);
-                    graph.getViewport().setMaxX(7);
-
-                    StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
-                    staticLabelsFormatter.setHorizontalLabels(new String[]{weekToday.getMonthValue() + "/" + weekToday.getDayOfMonth(), weekToday.plusDays(2).getMonthValue() + "/" + weekToday.plusDays(2).getDayOfMonth(), weekToday.plusDays(4).getMonthValue() + "/" + weekToday.plusDays(4).getDayOfMonth(), weekToday.plusDays(6).getMonthValue() + "/" + weekToday.plusDays(6).getDayOfMonth(), "Null"});
-                    graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
+                    graph.getViewport().setMaxX(4);
+//
+//                    StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
+//                    staticLabelsFormatter.setHorizontalLabels(new String[]{weekToday.getMonthValue() + "/" + weekToday.getDayOfMonth(), weekToday.plusDays(2).getMonthValue() + "/" + weekToday.plusDays(2).getDayOfMonth(), weekToday.plusDays(4).getMonthValue() + "/" + weekToday.plusDays(4).getDayOfMonth(), weekToday.plusDays(6).getMonthValue() + "/" + weekToday.plusDays(6).getDayOfMonth(), "Null"});
+//                    graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
 
                     LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
@@ -204,63 +224,57 @@ public class Week7Fragment extends Fragment {
                     double time;
                     String temp;
 
-                    series.resetData(new DataPoint[]{});
-                    for (DataSnapshot snapshot2 : snapshot.getChildren()) {
-                        date = snapshot2.child("currentTime").getValue(String.class);
-                        date = date.substring(0, date.indexOf('Z'));
-                        lt = LocalDateTime.parse(date, formatter);
-                        date = date.substring(0, date.indexOf('T'));
-                        now = LocalDate.parse(date);
-                        hour = lt.getHour();
-                        minute = lt.getMinute();
+
+//                    for (DataSnapshot snapshot2 : snapshot.getChildren()) {
+//                        date = snapshot2.child("currentTime").getValue(String.class);
+//                        date = date.substring(0, date.indexOf('Z'));
+//                        lt = LocalDateTime.parse(date, formatter);
+//                        date = date.substring(0, date.indexOf('T'));
+//                        now = LocalDate.parse(date);
+//                        hour = lt.getHour();
+//                        minute = lt.getMinute();
 
 
-                        if (minute >= 0 && minute < 10) {
-                            temp = hour + ".0" + minute;
-                        } else
-                            temp = hour + "." + minute;
 
-
-                        time = Double.parseDouble(temp);
-
-
-                        for (int i = 0; i < 7; i++) {
-                            if (now.equals(today.minusDays(i))) {
-                                risArray[i][0] = risArray[i][0] + snapshot2.child("ris").getValue(Integer.class);
-
-                                risArray[i][1]++;
-
-//                            point = new DataPoint(time, snapshot2.child("ris").getValue(Integer.class));
-//                            series.appendData(point, true, 1440);
-                            }
-
-
-                        }
-
+//                        if (minute >= 0 && minute < 10) {
+//                            temp = hour + ".0" + minute;
+//                        } else
+//                            temp = hour + "." + minute;
 
 //
+//                        time = Double.parseDouble(temp);
 
 
-//                    graph.getLegendRenderer().setVisible(true);
-//                    graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
-                    }
                     int counter = 0;
-                    for (int i = 6; i > 0; i--) {
+                    for (int i = 0; i < 4; i++) {
+                        Log.d(TAG, "onDataChange: dumb " + counter + " " + risArray[i][1]);
+                        if(risArray[i][1] > 0) {
+                            point = new DataPoint(counter, risArray[i][0] / risArray[i][1]);
 
-                        point = new DataPoint(counter, risArray[i][0] / risArray[i][1]);
-                        series.appendData(point, true, 1440);
-                        Log.d(TAG, "onDataChange: dumb " + i);
+
+                            series.appendData(point, true, 1440);
+                        }
+
                         counter++;
 
                     }
 
                     graph.addSeries(series);
-                    Log.d(TAG, "risArray Day 1 sum: " + risArray[0][0]);
-                    Log.d(TAG, "risArray Day 1 count: " + risArray[0][1]);
-                    Log.d(TAG, "risArray Day 2 sum: " + risArray[1][0]);
-                    Log.d(TAG, "risArray Day 2 count: " + risArray[1][1]);
+                    Log.d(TAG, "risArray Week 1 sum: " + risArray[0][0]);
+                    Log.d(TAG, "risArray Week 1 count: " + risArray[0][1]);
+                    Log.d(TAG, "risArray Week 2 sum: " + risArray[1][0]);
+                    Log.d(TAG, "risArray Week 2 count: " + risArray[1][1]);
                     Log.d(TAG, "risArray Day 3 sum: " + risArray[2][0]);
                     Log.d(TAG, "risArray Day 3 count: " + risArray[2][1]);
+//
+
+
+//                    graph.getLegendRenderer().setVisible(true);
+//                    graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+                }
+
+
+
 
 //                    txtRR.setText(String.valueOf(sum));
 
@@ -321,9 +335,9 @@ public class Week7Fragment extends Fragment {
 //                series.setValuesOnTopColor(Color.RED);
 //                series2.setDrawValuesOnTop(true);
 //                series2.setValuesOnTopColor(Color.RED);
-                    reff.removeEventListener(this);
-                }
+                reff.removeEventListener(this);
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -476,45 +490,6 @@ public class Week7Fragment extends Fragment {
 ////
 ////
 ////
-////                BarGraphSeries<DataPoint> series = new BarGraphSeries<>(new DataPoint[]{
-////                        new DataPoint(1, average),
-////
-////                });
-////                graph.addSeries(series);
-////                BarGraphSeries<DataPoint> series2 = new BarGraphSeries<>(new DataPoint[]{
-////                        new DataPoint(2, patient1.getRIS()),
-////
-////
-////                });
-////                graph.addSeries(series2);
-////                series.setColor(Color.GREEN);
-////                series.setTitle("Average RIS");
-////                series2.setTitle("Current RIS");
-////                graph.getLegendRenderer().setVisible(true);
-////                graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.BOTTOM);
-////// styling
-//////                    series.setValueDependentColor(new ValueDependentColor<DataPoint>() {
-//////                        @Override
-//////                        public int get(DataPoint data) {
-//////                            return Color.rgb((int) data.getX()*255/4, (int) Math.abs(data.getY()*255/6), 100);
-//////                        }
-//////                    });
-////
-////                series.setSpacing(50);
-////                series2.setSpacing(50);
-////
-////// draw values on top
-////                series.setDrawValuesOnTop(true);
-////                series.setValuesOnTopColor(Color.RED);
-////                series2.setDrawValuesOnTop(true);
-////                series2.setValuesOnTopColor(Color.RED);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
 
     }
 }

@@ -33,6 +33,8 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link MonthFragment#newInstance} factory method to
@@ -77,16 +79,51 @@ public class MonthFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        initDB();
+        super.onResume();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
-
-
         }
+    }
 
-        initDB();
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void init(View view) {
+        risTableData = view.findViewById(R.id.risTableData);
+        tempTableData = view.findViewById(R.id.tempTableData);
+        O2TableData = view.findViewById(R.id.spO2TableData);
+        RRTableData = view.findViewById(R.id.RRTableData);
+        TVTableData = view.findViewById(R.id.MVTableData);
+        HRTableData = view.findViewById(R.id.HRTableData);
+        risHeader = view.findViewById(R.id.risHeader);
+
+
+        currentDate = LocalDate.now();
+        LocalDate weekToday = currentDate.minusWeeks(7).plusDays(1);
+        Month m = currentDate.getMonth();
+        String month = m.toString();
+        month = month.substring(0, 1) + month.substring(1).toLowerCase();
+        int d = weekToday.getDayOfMonth();
+        int year = currentDate.getYear();
+        risHeader.setText("RIS data for " + month + " " + String.valueOf(year));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_day, container, false);
+        init(view);
+
+        return view;
     }
 
     private void initDB() {
@@ -106,6 +143,12 @@ public class MonthFragment extends Fragment {
                 int RRSum = 0;
                 double tempSum = 0.0;
                 int count = 0;
+                double[][] risArray = new double[7][7];
+                LocalDate rollingMonth;
+                LocalDate weekToday;
+                LocalDate curMonth = LocalDate.of(currentDate.getYear(), currentDate.getMonth(), 1);
+
+                Log.d(TAG, "onDataChange: test");
 
 
                 for (DataSnapshot snapshot2 : snapshot.getChildren()) {
@@ -113,14 +156,34 @@ public class MonthFragment extends Fragment {
                     date = date.substring(0, date.indexOf('T'));
                     now = LocalDate.parse(date);
 
-                    if (now.equals(today)) {
+
+                    if (today.getMonth().equals(now.getMonth())) {
                         risSum = risSum + snapshot2.child("ris").getValue(Integer.class);
                         HRSum = HRSum + snapshot2.child("hr").getValue(Integer.class);
                         O2Sum = O2Sum + snapshot2.child("spO2").getValue(Integer.class);
                         TVSum = TVSum + snapshot2.child("tv").getValue(Integer.class);
                         RRSum = RRSum + snapshot2.child("rr").getValue(Integer.class);
                         tempSum = tempSum + snapshot2.child("temp").getValue(Double.class);
+
                         count++;
+
+                        for (int i = 0; i < 5; i++) {
+                            rollingMonth = curMonth.plusWeeks(i);
+                            weekToday = rollingMonth.plusWeeks(1).minusDays(1);
+                            Log.d(TAG, "onDataChange: Yeehaw " + rollingMonth.getMonth() + " " + rollingMonth.getDayOfMonth() + " " + weekToday.getMonthValue() + "/" + weekToday.getDayOfMonth());
+
+                            if (rollingMonth.compareTo(now) <= 0 && now.compareTo(weekToday) < 0) {
+                                risArray[i][0] = risArray[i][0] + snapshot2.child("ris").getValue(Integer.class);
+                                Log.d(TAG, "onDataChange: Yeehaw " + rollingMonth.getDayOfMonth() + " " + now.getMonthValue() + "/" + now.getDayOfMonth());
+                                risArray[i][1]++;
+
+
+//                            point = new DataPoint(time, snapshot2.child("ris").getValue(Integer.class));
+//                            series.appendData(point, true, 1440);
+                            }
+
+
+                        }
                     }
                 }
 
@@ -137,7 +200,7 @@ public class MonthFragment extends Fragment {
 
                     GraphView graph = (GraphView) getView().findViewById(R.id.graph);
 
-                    graph.setTitle("RIS values by hour");
+                    graph.setTitle("RIS values by week");
 
                     graph.getViewport().setYAxisBoundsManual(true);
                     graph.getViewport().setMinY(-50);
@@ -146,11 +209,12 @@ public class MonthFragment extends Fragment {
 
                     graph.getViewport().setXAxisBoundsManual(true);
                     graph.getViewport().setMinX(0);
-                    graph.getViewport().setMaxX(24);
+                    graph.getViewport().setMaxX(4);
+//
+//                    StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
+//                    staticLabelsFormatter.setHorizontalLabels(new String[]{weekToday.getMonthValue() + "/" + weekToday.getDayOfMonth(), weekToday.plusDays(2).getMonthValue() + "/" + weekToday.plusDays(2).getDayOfMonth(), weekToday.plusDays(4).getMonthValue() + "/" + weekToday.plusDays(4).getDayOfMonth(), weekToday.plusDays(6).getMonthValue() + "/" + weekToday.plusDays(6).getDayOfMonth(), "Null"});
+//                    graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
-                    StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
-                    staticLabelsFormatter.setHorizontalLabels(new String[]{"12AM", "5AM", "10AM", "5PM", "10PM"});
-                    graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
                     LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
                     series.setTitle("Filtered data");
@@ -163,48 +227,57 @@ public class MonthFragment extends Fragment {
                     double time;
                     String temp;
 
-                    for (DataSnapshot snapshot2 : snapshot.getChildren()) {
-                        date = snapshot2.child("currentTime").getValue(String.class);
-                        date = date.substring(0, date.indexOf('Z'));
-                        lt = LocalDateTime.parse(date, formatter);
-                        date = date.substring(0, date.indexOf('T'));
-                        now = LocalDate.parse(date);
-                        hour = lt.getHour();
-                        minute = lt.getMinute();
+
+//                    for (DataSnapshot snapshot2 : snapshot.getChildren()) {
+//                        date = snapshot2.child("currentTime").getValue(String.class);
+//                        date = date.substring(0, date.indexOf('Z'));
+//                        lt = LocalDateTime.parse(date, formatter);
+//                        date = date.substring(0, date.indexOf('T'));
+//                        now = LocalDate.parse(date);
+//                        hour = lt.getHour();
+//                        minute = lt.getMinute();
 
 
-                        if (minute >= 0 && minute < 10) {
-                            temp = hour + ".0" + minute;
-                        } else
-                            temp = hour + "." + minute;
+
+//                        if (minute >= 0 && minute < 10) {
+//                            temp = hour + ".0" + minute;
+//                        } else
+//                            temp = hour + "." + minute;
+
+//
+//                        time = Double.parseDouble(temp);
 
 
-                        time = Double.parseDouble(temp);
+                    int counter = 0;
+                    for (int i = 0; i < 4; i++) {
+                        Log.d(TAG, "onDataChange: dumb " + counter + " " + risArray[i][1]);
+                        if(risArray[i][1] > 0) {
+                            point = new DataPoint(counter, risArray[i][0] / risArray[i][1]);
 
 
-                        if (now.equals(today)) {
-                            risSum = risSum + snapshot2.child("ris").getValue(Integer.class);
-                            HRSum = HRSum + snapshot2.child("hr").getValue(Integer.class);
-                            O2Sum = O2Sum + snapshot2.child("spO2").getValue(Integer.class);
-                            TVSum = TVSum + snapshot2.child("tv").getValue(Integer.class);
-                            RRSum = RRSum + snapshot2.child("rr").getValue(Integer.class);
-                            tempSum = tempSum + snapshot2.child("temp").getValue(Double.class);
-                            Log.d(TAG, "onDataChange: " + time);
-
-
-                            point = new DataPoint(time, snapshot2.child("ris").getValue(Integer.class));
                             series.appendData(point, true, 1440);
                         }
 
+                        counter++;
 
                     }
 
                     graph.addSeries(series);
+                    Log.d(TAG, "risArray Week 1 sum: " + risArray[0][0]);
+                    Log.d(TAG, "risArray Week 1 count: " + risArray[0][1]);
+                    Log.d(TAG, "risArray Week 2 sum: " + risArray[1][0]);
+                    Log.d(TAG, "risArray Week 2 count: " + risArray[1][1]);
+                    Log.d(TAG, "risArray Day 3 sum: " + risArray[2][0]);
+                    Log.d(TAG, "risArray Day 3 count: " + risArray[2][1]);
+//
 
 
 //                    graph.getLegendRenderer().setVisible(true);
 //                    graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
                 }
+
+
+
 
 //                    txtRR.setText(String.valueOf(sum));
 
@@ -267,6 +340,7 @@ public class MonthFragment extends Fragment {
 //                series2.setValuesOnTopColor(Color.RED);
                 reff.removeEventListener(this);
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -458,36 +532,6 @@ public class MonthFragment extends Fragment {
 //
 //            }
 //        });
-    }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_day, container, false);
-        init(view);
-
-        return view;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void init(View view) {
-        risTableData = view.findViewById(R.id.risTableData);
-        tempTableData = view.findViewById(R.id.tempTableData);
-        O2TableData = view.findViewById(R.id.spO2TableData);
-        RRTableData = view.findViewById(R.id.RRTableData);
-        TVTableData = view.findViewById(R.id.MVTableData);
-        HRTableData = view.findViewById(R.id.HRTableData);
-        risHeader = view.findViewById(R.id.risHeader);
-
-
-        currentDate = LocalDate.now();
-        Month m = currentDate.getMonth();
-        String month = m.toString();
-        month = month.substring(0, 1) + month.substring(1).toLowerCase();
-        int d = currentDate.getDayOfMonth();
-        int year = currentDate.getYear();
-        risHeader.setText("RIS data for "  + month + " " +  String.valueOf(d) + ", " + String.valueOf(year));
     }
 }

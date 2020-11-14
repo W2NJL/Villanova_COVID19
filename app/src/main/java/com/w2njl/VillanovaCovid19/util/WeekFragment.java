@@ -157,6 +157,8 @@ public class WeekFragment extends Fragment {
 
 
                     if (today.compareTo(now) >= 0 && now.compareTo(weekToday) > 0) {
+
+
                         risSum = risSum + snapshot2.child("ris").getValue(Integer.class);
                         HRSum = HRSum + snapshot2.child("hr").getValue(Integer.class);
                         O2Sum = O2Sum + snapshot2.child("spO2").getValue(Integer.class);
@@ -191,6 +193,11 @@ public class WeekFragment extends Fragment {
                     graph.getViewport().setXAxisBoundsManual(true);
                     graph.getViewport().setMinX(0);
                     graph.getViewport().setMaxX(7);
+
+
+                    StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
+                    staticLabelsFormatter.setHorizontalLabels(new String[]{weekToday.getMonthValue() + "/" + weekToday.getDayOfMonth(), weekToday.plusDays(2).getMonthValue() + "/" + weekToday.plusDays(2).getDayOfMonth(), weekToday.plusDays(4).getMonthValue() + "/" + weekToday.plusDays(4).getDayOfMonth(), weekToday.plusDays(6).getMonthValue() + "/" + weekToday.plusDays(6).getDayOfMonth(), "Null"});
+                    graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
 
                     LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
@@ -229,7 +236,7 @@ public class WeekFragment extends Fragment {
                                 risArray[i][0] = risArray[i][0] + snapshot2.child("ris").getValue(Integer.class);
 
                                 risArray[i][1]++;
-
+                                Log.d(TAG, "onDataChange: Day is " + now.getMonth() + " " + now.getDayOfMonth());
 //                            point = new DataPoint(time, snapshot2.child("ris").getValue(Integer.class));
 //                            series.appendData(point, true, 1440);
                             }
@@ -250,7 +257,7 @@ public class WeekFragment extends Fragment {
 
                         point = new DataPoint(counter, risArray[i][0]/risArray[i][1]);
                         series.appendData(point, true, 1440);
-                        Log.d(TAG, "onDataChange: dumb " + i);
+                        Log.d(TAG, "onDataChange: dumb " + risArray[i][0] + ":" + risArray[i][1] + " FROM! " + i);
                         counter++;
 
                     }

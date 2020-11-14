@@ -966,7 +966,7 @@ exec.shutdown();
                 startActivity(intent);
                 return true;
             default:
-                intent = new Intent(RISActivity.this, RISArchiveActivity.class);
+                intent = new Intent(RISActivity.this, RISMonthArchiveActivity.class);
                 startActivity(intent);
                 return false;
         }
