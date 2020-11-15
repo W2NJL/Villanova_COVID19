@@ -309,8 +309,8 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
                                           graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
                                           graph.getViewport().setYAxisBoundsManual(true);
-                                          graph.getViewport().setMinY(-50);
-                                          graph.getViewport().setMaxY(30);
+                                          graph.getViewport().setMinY(-35);
+                                          graph.getViewport().setMaxY(35);
 
 
                                           graph.getViewport().setXAxisBoundsManual(true);
@@ -470,6 +470,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
         LocalDateTime covidTime;
         String tempDate;
         String realMinute;
+        String realSeconds;
         tempDate = covid.getCurrentTime();
         tempDate = tempDate.substring(0, tempDate.indexOf('Z'));
         covidTime = LocalDateTime.parse(tempDate);
@@ -490,6 +491,12 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
 
         int seconds = covidTime.getSecond();
 
+        if (seconds >=0 && seconds <10) {
+            realSeconds = "0" + seconds;
+        }
+        else
+            realSeconds = "" + seconds;
+
         txtRIS.setText(String.valueOf(covid.getRIS()));
         txtHR.setText(String.valueOf(covid.getHR()) + " bpm");
         txtTemp.setText(String.valueOf(covid.getTemp()) + "\u00B0F");
@@ -498,7 +505,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
         txtRisk.setText(String.valueOf(covid.getDanger()));
 //        txtTimeStamp.setText((String.valueOf(covid.getCurrentTime())));
         txtTimeStamp.setText("RIS sample taken on " + month + " " + String.valueOf(d) +", " + String.valueOf(year) + " at " + String.valueOf(hour) + ":" + realMinute
-        + ":" + String.valueOf(seconds));
+        + ":" + realSeconds);
 
         setDangerColor(txtRisk, covid);
 
