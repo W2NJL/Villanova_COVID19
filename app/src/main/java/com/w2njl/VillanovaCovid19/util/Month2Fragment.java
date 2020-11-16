@@ -47,7 +47,7 @@ public class Month2Fragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private static final String TAG = "Month2Fragment";
+    private static final String TAG = "Month2Frag";
     DatabaseReference reff;
     private static CovidFeatures patient1 = new CovidFeatures();
     TextView risTableData, tempTableData, O2TableData, RRTableData, TVTableData, HRTableData, risHeader;
