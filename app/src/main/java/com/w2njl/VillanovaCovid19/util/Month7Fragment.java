@@ -186,7 +186,7 @@ public class Month7Fragment extends Fragment {
 
                 if (count == 0) {
 
-                    Toast.makeText(getActivity().getBaseContext(), "There is no data available for today folks", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getBaseContext(), "There is no data available for this month", Toast.LENGTH_SHORT).show();
                 } else {
                     risTableData.setText(String.valueOf(risSum / count));
                     tempTableData.setText(String.valueOf(Precision.round(tempSum / count, 1)) + "°F");

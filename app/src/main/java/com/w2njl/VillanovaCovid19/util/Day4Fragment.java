@@ -164,7 +164,7 @@ public class Day4Fragment extends Fragment {
 
                 if (count == 0) {
 
-                    Toast.makeText(getActivity(), "There is no data available for today folks", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "There is no data available for today", Toast.LENGTH_SHORT).show();
                 } else {
                     risTableData.setText(String.valueOf(risSum / count));
                     tempTableData.setText(String.valueOf(Precision.round(tempSum / count, 1)) + "°F");
