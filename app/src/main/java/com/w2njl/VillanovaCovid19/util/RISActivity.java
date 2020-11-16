@@ -10,10 +10,14 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.transition.Slide;
 import android.util.Log;
 import android.view.Menu;
@@ -47,6 +51,11 @@ import com.w2njl.VillanovaCovid19.R;
 
 import org.apache.commons.math3.util.Precision;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -83,6 +92,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
     private SwipeRefreshLayout mSwipeRefreshLayout;
        private Intent mIntent;
     Query lastQuery;
+    File imagePath;
 
 
 
@@ -238,6 +248,22 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
 
 
 
+        btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Build.VERSION.SDK_INT >= 24) {
+                    try {
+                        Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
+                        m.invoke(null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                Bitmap bitmap = takeScreenshot();
+                saveBitmap(bitmap);
+                shareIt();
+            }
+        });
 
 
 
@@ -977,6 +1003,39 @@ exec.shutdown();
                 startActivity(intent);
                 return false;
         }
+    }
+
+    public Bitmap takeScreenshot() {
+        View rootView = findViewById(android.R.id.content).getRootView();
+        rootView.setDrawingCacheEnabled(true);
+        return rootView.getDrawingCache();
+    }
+
+    private void saveBitmap(Bitmap bitmap) {
+        imagePath = new File(getExternalFilesDir(null).getAbsolutePath() + "/scrnshot.png"); ////File imagePath
+        FileOutputStream fos;
+        try {
+            fos = new FileOutputStream(imagePath);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            Log.e("GREC", e.getMessage(), e);
+        } catch (IOException e) {
+            Log.e("GREC", e.getMessage(), e);
+        }
+    }
+
+    private void shareIt() {
+        Uri uri = Uri.fromFile(imagePath);
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("image/*");
+        String shareBody = "My COVID-19 RIS score is + " + patient1.getDanger() ;
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "My COVID-19 RIS score");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+
+        startActivity(Intent.createChooser(sharingIntent, "Share your RIS data via"));
     }
 
 }
