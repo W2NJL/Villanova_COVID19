@@ -863,7 +863,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
         // Set snackbar layout params
         int navbarHeight = getNavBarHeight(this);
         FrameLayout.LayoutParams parentParams = (FrameLayout.LayoutParams) layout.getLayoutParams();
-        parentParams.setMargins(0, 0, 0, 0 - navbarHeight + 200);
+        parentParams.setMargins(0, 0, 0, 0 - navbarHeight );
         layout.setLayoutParams(parentParams);
         layout.setPadding(0, 0, 0, 0);
         layout.setLayoutParams(parentParams);

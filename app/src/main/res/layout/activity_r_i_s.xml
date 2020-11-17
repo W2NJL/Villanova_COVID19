@@ -74,9 +74,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardElevation="@dimen/card_elevation"
+                app:cardCornerRadius="10dp"
+                android:paddingTop="6dp"
+                app:cardBackgroundColor="@color/bg_color"
+                >
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:paddingTop="6dp"
+                >
 
                 <ImageView
                     android:id="@+id/imageView3"
@@ -93,6 +104,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="188dp"
+                    android:fontFamily="@font/popind_regular"
                     android:text="Loading"
                     app:layout_constraintStart_toStartOf="@+id/guideline4"
                     app:layout_constraintTop_toTopOf="@+id/txtHRLabel" />
@@ -102,6 +114,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="188dp"
+                    android:fontFamily="@font/popind_regular"
                     android:text="Loading"
                     app:layout_constraintStart_toStartOf="@+id/guideline4"
                     app:layout_constraintTop_toTopOf="@+id/txtTempLabel" />
@@ -112,6 +125,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="88dp"
                     android:layout_marginTop="52dp"
+                    android:fontFamily="@font/popind_regular"
                     android:text="Temperature:"
                     app:layout_constraintStart_toStartOf="@+id/guideline3"
                     app:layout_constraintTop_toBottomOf="@+id/txtHRLabel" />
@@ -121,6 +135,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="85dp"
+                    android:fontFamily="@font/popind_regular"
                     android:text="RR:"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/txtTV"
@@ -133,11 +148,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="16dp"
+                    android:fontFamily="@font/poppins_bold"
                     android:text="RIS:"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="@+id/guideline3"
                     app:layout_constraintTop_toTopOf="@+id/guideline2" />
+
 
                 <com.jjoe64.graphview.GraphView
                     android:id="@+id/graph"
@@ -147,6 +164,8 @@
                     app:layout_constraintEnd_toStartOf="@+id/guideline"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+
 
                 <!--            <ImageView-->
                 <!--                android:id="@+id/RISImage"-->
@@ -209,6 +228,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="88dp"
                     android:layout_marginTop="24dp"
+                    android:fontFamily="@font/popind_regular"
                     android:text="HR:"
                     app:layout_constraintStart_toStartOf="@+id/guideline3"
                     app:layout_constraintTop_toBottomOf="@+id/txtRISLabel" />
@@ -218,6 +238,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="108dp"
+                    android:fontFamily="@font/popind_regular"
                     android:text="Oxygen saturation:"
                     app:layout_constraintBottom_toBottomOf="@+id/txtSp02Level"
                     app:layout_constraintStart_toStartOf="parent" />
@@ -226,8 +247,9 @@
                     android:id="@+id/txtSp02Level"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="72dp"
-                    android:layout_marginTop="52dp"
+                    android:layout_marginStart="68dp"
+                    android:layout_marginTop="44dp"
+                    android:fontFamily="@font/popind_regular"
                     app:layout_constraintStart_toEndOf="@+id/txtSpO2"
                     app:layout_constraintTop_toBottomOf="@+id/txtTempValue" />
 
@@ -235,9 +257,10 @@
                     android:id="@+id/txtTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="56dp"
+                    android:layout_marginTop="52dp"
+                    android:fontFamily="@font/popind_regular"
                     app:layout_constraintEnd_toStartOf="@+id/txtRR"
-                    app:layout_constraintHorizontal_bias="0.236"
+                    app:layout_constraintHorizontal_bias="0.235"
                     app:layout_constraintStart_toEndOf="@+id/txtTVlabel"
                     app:layout_constraintTop_toBottomOf="@+id/txtSpO2" />
 
@@ -246,6 +269,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="28dp"
+                    android:fontFamily="@font/popind_regular"
                     app:layout_constraintBottom_toBottomOf="@+id/txtRRLabel"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/txtRRLabel"
@@ -255,6 +279,7 @@
                     android:id="@+id/txtTVlabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/popind_regular"
                     android:text="TV:"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -288,6 +313,7 @@
                     android:id="@+id/txtRIS"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/popind_regular"
                     android:text="8"
                     android:textSize="24sp"
                     android:textStyle="bold"
@@ -306,6 +332,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="88dp"
+                    android:fontFamily="@font/popind_regular"
                     android:text=""
                     android:textSize="24sp"
                     app:layout_constraintStart_toEndOf="@+id/txtRIS"
@@ -356,6 +383,8 @@
                     app:layout_constraintTop_toBottomOf="@+id/graph" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
 
         </ScrollView>
 

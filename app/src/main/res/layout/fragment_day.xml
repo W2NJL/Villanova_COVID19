@@ -34,7 +34,8 @@
     android:layout_width="300dp"
     android:layout_height="wrap_content"
     app:cardElevation="@dimen/card_elevation"
-    app:cardCornerRadius="10dp">
+    app:cardCornerRadius="10dp"
+    android:layout_marginBottom="10dp">
 
 
 
@@ -176,13 +177,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardElevation="@dimen/card_elevation"
-            app:cardCornerRadius="10dp">
+            app:cardCornerRadius="10dp"
+            android:layout_marginTop="10dp">
 
         <com.jjoe64.graphview.GraphView
             android:id="@+id/graph"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:layout_marginTop="50dp"
+
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
