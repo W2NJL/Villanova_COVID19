@@ -20,6 +20,7 @@ import android.os.Handler;
 import android.os.StrictMode;
 import android.transition.Slide;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
@@ -533,6 +535,12 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
         txtTimeStamp.setText("RIS sample taken on " + month + " " + String.valueOf(d) +", " + String.valueOf(year) + " at " + String.valueOf(hour) + ":" + realMinute
         + ":" + realSeconds);
 
+        if(!running){
+        Toast toast = Toast.makeText(this, "Your last RIS reading was taken on\n" + month + " " + String.valueOf(d) +", " + String.valueOf(year) + " at " + String.valueOf(hour) + ":" + realMinute
+                + ":" + realSeconds + "\nwith a risk level of " + covid.getDanger(), Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();}
+
         setDangerColor(txtRisk, covid);
 
         txtSpO2.setText(String.valueOf(covid.getSpO2()) + "%");
@@ -969,7 +977,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
 
         if(exec !=null){
             if(!exec.isShutdown())
-        exec.shutdown();}
+        exec.shutdownNow();}
         super.onPause();
     }
 
