@@ -1030,7 +1030,7 @@ exec.shutdown();
         Uri uri = Uri.fromFile(imagePath);
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("image/*");
-        String shareBody = "My COVID-19 RIS score is + " + patient1.getDanger() ;
+        String shareBody = "My COVID-19 RIS score is " + patient1.getDanger() ;
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "My COVID-19 RIS score");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
         sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
