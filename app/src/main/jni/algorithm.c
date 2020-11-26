@@ -5,14 +5,16 @@
 #include <stdlib.h>
 #include "algorithm.h"
 #include "../../../../../../AppData/Local/Android/Sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr/include/jni.h"
-#include "main.h"
 #include "filtering.h"
 #include "filtering_terminate.h"
 #include "rt_nonfinite.h"
-#include "features.h"
-#include "features_emxAPI.h"
-#include "features_terminate.h"
-
+#include "ac_feat.h"
+#include "ac_feat_emxAPI.h"
+#include "ac_feat_terminate.h"
+#include "phase_sep.h"
+#include "phase_sep_terminate.h"
+#include "phase_sep_emxAPI.h"
+#include "filtering_emxAPI.h"
 
 
 //double *dv;
@@ -165,50 +167,127 @@
 JNIEXPORT jdouble JNICALL
 Java_com_w2njl_VillanovaCovid19_CovidRisk_addArray(JNIEnv *env, jclass clazz,
                                                            jdoubleArray jarr, jdoubleArray jarr2) {
-    static double dv2[2890080];
-    static double y_fil[2890080];
-    static double subarray[37973];
 
+   //Construct double and EMX arrays for filtered and unfiltered data
 
+//    static double subarray[37973];
+    emxArray_real_T *rawInputs;
+    emxArray_real_T *filteredOutputs;
+
+    //Construct data types to store array data
+    double siz_in_data[100];
+    double siz_ex_data[100];
+    double feat_ac[9];
+    int siz_in_size[2];
+    int siz_ex_size[2];
+    int insize;
+    int exsize;
+    int inelements;
+    int outelements;
+
+    //Store the Java arrays as JNI data types
     jdouble *arr = (*env)->GetDoubleArrayElements(env, jarr, NULL);
     jdouble *arr2 = (*env)->GetDoubleArrayElements(env, jarr2, NULL);
     double res=0;
+
+    //Get elements of WAV file array
     int size = (*env)->GetArrayLength(env, jarr);
+
+    static double dv2[2890080];
+    static double y_fil[2890080];
+
+    //Convert from JNI double array to C array
     for(int i=0;i<size;i++)
         dv2[i] = arr[i];
 
+    //Wrap double arrays in EMX array
+    rawInputs = emxCreateWrapper_real_T(dv2, size, 1);
+    filteredOutputs = emxCreateWrapper_real_T(y_fil, size, 1);
 
-    filtering(dv2, y_fil);
+    //Call the filtering function
+    filtering(rawInputs, 16000, filteredOutputs);
 
-    for(int i=0;i<size;i++)
-        arr[i] = y_fil[i];
+//    for(int i=0;i<size;i++)
+//        arr[i] = y_fil[i];
 
+    /*Initialize the cell_wrap arrays */
+    cell_wrap_0 y_ph_in[100];
+    cell_wrap_0 y_ph_fil_in[100];
+    cell_wrap_0 y_ph_ex[100];
+    cell_wrap_0 y_ph_fil_ex[100];
+    emxInitMatrix_cell_wrap_01(y_ph_in);
+    emxInitMatrix_cell_wrap_01(y_ph_fil_in);
+    emxInitMatrix_cell_wrap_01(y_ph_ex);
+    emxInitMatrix_cell_wrap_01(y_ph_fil_ex);
 
-    double datax[3];
+    /*Run the phase sep function */
+    phase_sep(rawInputs, filteredOutputs, y_ph_in, y_ph_fil_in, y_ph_ex, y_ph_fil_ex, siz_in_data, siz_in_size, siz_ex_data, siz_ex_size);
 
-    double entropy_dat1;
-    double Sk;
-    double Ku;
+    /*Destroy the EMX arrays */
+    emxDestroyArray_real_T(filteredOutputs);
+    emxDestroyArray_real_T(rawInputs);
 
-    int j = 540296;
-    for(int i=0; i<37974; i++){
-        subarray [i] = dv2[j];
-        j++;
+    /*Get number of phases */
+    inelements = siz_in_size[1];
+    outelements = siz_ex_size[1];
+    double featArr[inelements+outelements][9];
+
+    /* Call the ACF function */
+    for(int i=0; i<inelements; i++){
+
+        ac_feat(y_ph_in[i].f1, y_ph_fil_in[i].f1, featArr[i]);
+
     }
 
-    emxArray_real_T *inputs;
+    int featArrCount = outelements + inelements - inelements +1;
+    int z=0;
 
-    inputs = emxCreateWrapper_real_T(subarray, 37973, 1);
+    for(int i=featArrCount; i<outelements+inelements; i++)
+    {
+        ac_feat(y_ph_ex[z].f1, y_ph_fil_ex[z].f1, featArr[i]);
 
-    features(inputs, &entropy_dat1, &Sk, &Ku);
 
-    datax[0] = entropy_dat1;
-    datax[1] = Sk;
-    datax[2] = Ku;
+        z++;
+    }
 
-    for(int i=0;i<3;i++)
+    /*Destroy the cell wrap data */
+    emxDestroyMatrix_cell_wrap_0(y_ph_fil_ex);
+    emxDestroyMatrix_cell_wrap_0(y_ph_ex);
+    emxDestroyMatrix_cell_wrap_0(y_ph_fil_in);
+    emxDestroyMatrix_cell_wrap_0(y_ph_in);
+
+
+    double datax[2];
+
+//    double entropy_dat1;
+//    double Sk;
+//    double Ku;
+//
+//    int j = 540296;
+//    for(int i=0; i<37974; i++){
+//        subarray [i] = dv2[j];
+//        j++;
+//    }
+
+//    emxArray_real_T *inputs;
+//
+//    inputs = emxCreateWrapper_real_T(subarray, 37973, 1);
+
+////    features(inputs, &entropy_dat1, &Sk, &Ku);
+//
+   datax[0] = inelements;
+    datax[1] = outelements;
+//    datax[2] = Ku;
+//
+//    for(int i=0;i<inelements+outelements;i++){
+//
+//        datax[i] = featArr[i][0];
+//        }
+//
+    for(int i=0;i<2;i++)
         arr2[i] = datax[i];
 
+    /*Return the arrays back to Java */
 
     (*env)->ReleaseDoubleArrayElements(env, jarr, arr, 0);
     (*env)->ReleaseDoubleArrayElements(env, jarr2, arr2, 0);

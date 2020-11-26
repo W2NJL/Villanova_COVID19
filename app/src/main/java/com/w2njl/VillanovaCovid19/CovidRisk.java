@@ -32,40 +32,40 @@ public class CovidRisk extends AppCompatActivity {
         TextView txtKurt = findViewById(R.id.txtKurt);
 
         // Read in the WAV file
-        WavFile j = new WavFile("32mm.wav", this.getApplicationContext());
-
-        ArrayList<Double> jz = j.getSamples();
-
-        Double[] dblArray = new Double[jz.size()];
-
-        dblArray = jz.toArray(dblArray);
-
-        tz.setText(j.fileName());
-
-        //Convert WAV file ArrayList to array of double.  THIS is the array that needs to be sent to C for filtering.
-        double[] unboxed = Stream.of(dblArray).mapToDouble(Double::doubleValue).toArray();
-        double[] zz = new double[3];
-
-        addArray(unboxed, zz);
+//        WavFile j = new WavFile("32mm.wav", this.getApplicationContext());
+//
+//        ArrayList<Double> jz = j.getSamples();
+//
+//        Double[] dblArray = new Double[jz.size()];
+//
+//        dblArray = jz.toArray(dblArray);
+//
+//        tz.setText(j.fileName());
+//
+//        //Convert WAV file ArrayList to array of double.  THIS is the array that needs to be sent to C for filtering.
+//        double[] unboxed = Stream.of(dblArray).mapToDouble(Double::doubleValue).toArray();
+//        double[] zz = new double[3];
+//
+//        addArray(unboxed, zz);
 
 //Use Double from JNI function as a test from transferring array from C to Java
 
-//        double [] z = doublefromJNI();
-
-
-
-        double mean = zz[0];
-        double skew = zz[1];
-        double kurt = zz[2];
-
-        double max = Arrays.stream(unboxed).max().getAsDouble();
-        double min = Arrays.stream(unboxed).min().getAsDouble();
-
-        txtMax.setText("The maximum value of the filtered array is: " + max);
-        txtMin.setText("The minimum value of the filtered array is: " + min);
-        txtMean.setText("The mean value of the raw array is: " + mean);
-        txtSkew.setText("The skewness of the raw array is: " + skew);
-        txtKurt.setText("The kurtosis of the raw array is: " + kurt);
+////        double [] z = doublefromJNI();
+//
+//
+//
+//        double mean = zz[0];
+//        double skew = zz[1];
+//        double kurt = zz[2];
+//
+//        double max = Arrays.stream(unboxed).max().getAsDouble();
+//        double min = Arrays.stream(unboxed).min().getAsDouble();
+//
+//        txtMax.setText("The maximum value of the filtered array is: " + max);
+//        txtMin.setText("The minimum value of the filtered array is: " + min);
+//        txtMean.setText("The mean value of the raw array is: " + mean);
+//        txtSkew.setText("The skewness of the raw array is: " + skew);
+//        txtKurt.setText("The kurtosis of the raw array is: " + kurt);
 
     }
 

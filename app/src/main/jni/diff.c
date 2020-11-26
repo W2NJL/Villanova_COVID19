@@ -5,13 +5,13 @@
  * File: diff.c
  *
  * MATLAB Coder version            : 5.0
- * C/C++ source code generated on  : 23-Oct-2020 11:12:36
+ * C/C++ source code generated on  : 23-Nov-2020 00:25:45
  */
 
 /* Include Files */
 #include "diff.h"
-#include "features.h"
-#include "features_emxutil.h"
+#include "ac_feat.h"
+#include "ac_feat_emxutil.h"
 #include "rt_nonfinite.h"
 
 /* Function Definitions */
@@ -43,7 +43,7 @@ void diff(const emxArray_real_T *x, emxArray_real_T *y)
     } else {
       ixLead = y->size[0];
       y->size[0] = x->size[0] - 1;
-      emxEnsureCapacity_real_T(y, ixLead);
+      acemxEnsureCapacity_real_T(y, ixLead);
       if (x->size[0] - 1 != 0) {
         ixLead = 1;
         iyLead = 0;

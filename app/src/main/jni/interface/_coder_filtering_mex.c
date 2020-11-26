@@ -5,7 +5,7 @@
  * File: _coder_filtering_mex.c
  *
  * MATLAB Coder version            : 5.0
- * C/C++ source code generated on  : 21-Sep-2020 22:35:40
+ * C/C++ source code generated on  : 05-Nov-2020 13:57:38
  */
 
 /* Include Files */
@@ -14,7 +14,7 @@
 
 /* Function Declarations */
 MEXFUNCTION_LINKAGE void filtering_mexFunction(int32_T nlhs, mxArray *plhs[1],
-  int32_T nrhs, const mxArray *prhs[1]);
+  int32_T nrhs, const mxArray *prhs[2]);
 
 /* Function Definitions */
 
@@ -22,11 +22,11 @@ MEXFUNCTION_LINKAGE void filtering_mexFunction(int32_T nlhs, mxArray *plhs[1],
  * Arguments    : int32_T nlhs
  *                mxArray *plhs[1]
  *                int32_T nrhs
- *                const mxArray *prhs[1]
+ *                const mxArray *prhs[2]
  * Return Type  : void
  */
 void filtering_mexFunction(int32_T nlhs, mxArray *plhs[1], int32_T nrhs, const
-  mxArray *prhs[1])
+  mxArray *prhs[2])
 {
   const mxArray *outputs[1];
   emlrtStack st = { NULL,              /* site */
@@ -37,8 +37,8 @@ void filtering_mexFunction(int32_T nlhs, mxArray *plhs[1], int32_T nrhs, const
   st.tls = emlrtRootTLSGlobal;
 
   /* Check for proper number of arguments. */
-  if (nrhs != 1) {
-    emlrtErrMsgIdAndTxt(&st, "EMLRT:runTime:WrongNumberOfInputs", 5, 12, 1, 4, 9,
+  if (nrhs != 2) {
+    emlrtErrMsgIdAndTxt(&st, "EMLRT:runTime:WrongNumberOfInputs", 5, 12, 2, 4, 9,
                         "filtering");
   }
 

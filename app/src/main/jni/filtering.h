@@ -5,7 +5,7 @@
  * File: filtering.h
  *
  * MATLAB Coder version            : 5.0
- * C/C++ source code generated on  : 21-Sep-2020 22:35:40
+ * C/C++ source code generated on  : 05-Nov-2020 13:57:38
  */
 
 #ifndef FILTERING_H
@@ -18,7 +18,8 @@
 #include "filtering_types.h"
 
 /* Function Declarations */
-extern void filtering(const double y_raw[2411040], double y_fil[2411040]);
+extern void filtering(const emxArray_real_T *y_raw, double Fs, emxArray_real_T
+                      *y_fil);
 
 #endif
 

@@ -5,17 +5,17 @@
  * File: ecdf.c
  *
  * MATLAB Coder version            : 5.0
- * C/C++ source code generated on  : 23-Oct-2020 11:12:36
+ * C/C++ source code generated on  : 23-Nov-2020 00:25:45
  */
 
 /* Include Files */
 #include "ecdf.h"
+#include "ac_feat.h"
+#include "ac_feat_emxutil.h"
 #include "diff.h"
-#include "features.h"
-#include "features_emxutil.h"
 #include "nullAssignment.h"
 #include "rt_nonfinite.h"
-#include "sort.h"
+#include "featsort.h"
 
 /* Function Definitions */
 
@@ -51,19 +51,19 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
   emxArray_real_T *b_x;
   double ex;
   double d;
-  emxInit_boolean_T(&dInd, 1);
+  acemxInit_boolean_T(&dInd, 1);
   i = dInd->size[0];
   dInd->size[0] = y->size[0];
-  emxEnsureCapacity_boolean_T(dInd, i);
+  acemxEnsureCapacity_boolean_T(dInd, i);
   idx = y->size[0];
   for (i = 0; i < idx; i++) {
     dInd->data[i] = rtIsNaN(y->data[i]);
   }
 
-  emxInit_boolean_T(&r, 1);
+  acemxInit_boolean_T(&r, 1);
   i = r->size[0];
   r->size[0] = varargin_4->size[1];
-  emxEnsureCapacity_boolean_T(r, i);
+  acemxEnsureCapacity_boolean_T(r, i);
   idx = varargin_4->size[1];
   for (i = 0; i < idx; i++) {
     r->data[i] = rtIsNaN(varargin_4->data[i]);
@@ -76,7 +76,7 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
 
   i = r->size[0];
   r->size[0] = varargin_4->size[1];
-  emxEnsureCapacity_boolean_T(r, i);
+  acemxEnsureCapacity_boolean_T(r, i);
   idx = varargin_4->size[1];
   for (i = 0; i < idx; i++) {
     r->data[i] = (varargin_4->data[i] > 0.0);
@@ -90,10 +90,10 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
     }
   }
 
-  emxInit_int32_T(&r1, 1);
+  acemxInit_int32_T(&r1, 1);
   i = r1->size[0];
   r1->size[0] = trueCount;
-  emxEnsureCapacity_int32_T(r1, i);
+  acemxEnsureCapacity_int32_T(r1, i);
   idx = 0;
   for (b_i = 0; b_i <= n; b_i++) {
     if (dInd->data[b_i] && r->data[b_i]) {
@@ -110,10 +110,10 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
     }
   }
 
-  emxInit_boolean_T(&cens, 1);
+  acemxInit_boolean_T(&cens, 1);
   i = cens->size[0];
   cens->size[0] = trueCount;
-  emxEnsureCapacity_boolean_T(cens, i);
+  acemxEnsureCapacity_boolean_T(cens, i);
   idx = 0;
   for (b_i = 0; b_i <= n; b_i++) {
     if (dInd->data[b_i] && r->data[b_i]) {
@@ -130,10 +130,10 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
     }
   }
 
-  emxInit_real_T(&freq, 1);
+  acemxInit_real_T(&freq, 1);
   i = freq->size[0];
   freq->size[0] = trueCount;
-  emxEnsureCapacity_real_T(freq, i);
+  acemxEnsureCapacity_real_T(freq, i);
   idx = 0;
   for (b_i = 0; b_i <= n; b_i++) {
     if (dInd->data[b_i] && r->data[b_i]) {
@@ -142,21 +142,21 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
     }
   }
 
-  emxFree_boolean_T(&r);
+  acemxFree_boolean_T(&r);
   i = x->size[0];
   x->size[0] = r1->size[0];
-  emxEnsureCapacity_real_T(x, i);
+  acemxEnsureCapacity_real_T(x, i);
   idx = r1->size[0];
   for (i = 0; i < idx; i++) {
     x->data[i] = y->data[r1->data[i] - 1];
   }
 
-  emxFree_int32_T(&r1);
-  emxInit_int32_T(&iidx, 1);
-  sort(x, iidx);
+  acemxFree_int32_T(&r1);
+  acemxInit_int32_T(&iidx, 1);
+  acb_sort(x, iidx);
   i = dInd->size[0];
   dInd->size[0] = iidx->size[0];
-  emxEnsureCapacity_boolean_T(dInd, i);
+  acemxEnsureCapacity_boolean_T(dInd, i);
   idx = iidx->size[0];
   for (i = 0; i < idx; i++) {
     dInd->data[i] = cens->data[iidx->data[i] - 1];
@@ -164,25 +164,25 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
 
   i = cens->size[0];
   cens->size[0] = dInd->size[0];
-  emxEnsureCapacity_boolean_T(cens, i);
+  acemxEnsureCapacity_boolean_T(cens, i);
   idx = dInd->size[0];
   for (i = 0; i < idx; i++) {
     cens->data[i] = dInd->data[i];
   }
 
-  emxInit_real_T(&totcumfreq, 1);
+  acemxInit_real_T(&totcumfreq, 1);
   i = totcumfreq->size[0];
   totcumfreq->size[0] = iidx->size[0];
-  emxEnsureCapacity_real_T(totcumfreq, i);
+  acemxEnsureCapacity_real_T(totcumfreq, i);
   idx = iidx->size[0];
   for (i = 0; i < idx; i++) {
     totcumfreq->data[i] = freq->data[iidx->data[i] - 1];
   }
 
-  emxFree_int32_T(&iidx);
+  acemxFree_int32_T(&iidx);
   i = freq->size[0];
   freq->size[0] = totcumfreq->size[0];
-  emxEnsureCapacity_real_T(freq, i);
+  acemxEnsureCapacity_real_T(freq, i);
   idx = totcumfreq->size[0];
   for (i = 0; i < idx; i++) {
     freq->data[i] = totcumfreq->data[i];
@@ -200,7 +200,7 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
     freq->data[i] *= (double)!cens->data[i];
   }
 
-  emxFree_boolean_T(&cens);
+  acemxFree_boolean_T(&cens);
   if ((freq->size[0] != 1) && (freq->size[0] != 0) && (freq->size[0] != 1)) {
     i = freq->size[0];
     for (b_i = 0; b_i <= i - 2; b_i++) {
@@ -208,12 +208,12 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
     }
   }
 
-  emxInit_boolean_T(&isDiff, 1);
-  emxInit_real_T(&r2, 1);
+  acemxInit_boolean_T(&isDiff, 1);
+  acemxInit_real_T(&r2, 1);
   diff(x, r2);
   i = isDiff->size[0];
   isDiff->size[0] = r2->size[0];
-  emxEnsureCapacity_boolean_T(isDiff, i);
+  acemxEnsureCapacity_boolean_T(isDiff, i);
   idx = r2->size[0];
   for (i = 0; i < idx; i++) {
     isDiff->data[i] = (r2->data[i] == 0.0);
@@ -234,7 +234,7 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
   if (b_y) {
     i = r2->size[0];
     r2->size[0] = x->size[0];
-    emxEnsureCapacity_real_T(r2, i);
+    acemxEnsureCapacity_real_T(r2, i);
     idx = x->size[0];
     for (i = 0; i < idx; i++) {
       r2->data[i] = x->data[i];
@@ -243,7 +243,7 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
     nullAssignment(r2, isDiff);
     i = x->size[0];
     x->size[0] = r2->size[0];
-    emxEnsureCapacity_real_T(x, i);
+    acemxEnsureCapacity_real_T(x, i);
     idx = r2->size[0];
     for (i = 0; i < idx; i++) {
       x->data[i] = r2->data[i];
@@ -253,19 +253,19 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
     nullAssignment(freq, isDiff);
   }
 
-  emxFree_boolean_T(&isDiff);
-  emxInit_real_T(&D, 1);
+  acemxFree_boolean_T(&isDiff);
+  acemxInit_real_T(&D, 1);
   diff(freq, r2);
   i = D->size[0];
   D->size[0] = r2->size[0] + 1;
-  emxEnsureCapacity_real_T(D, i);
+  acemxEnsureCapacity_real_T(D, i);
   D->data[0] = freq->data[0];
   idx = r2->size[0];
   for (i = 0; i < idx; i++) {
     D->data[i + 1] = r2->data[i];
   }
 
-  emxFree_real_T(&r2);
+  acemxFree_real_T(&r2);
   if (1 > totcumfreq->size[0] - 1) {
     idx = 1;
   } else {
@@ -274,17 +274,17 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
 
   i = freq->size[0];
   freq->size[0] = idx;
-  emxEnsureCapacity_real_T(freq, i);
+  acemxEnsureCapacity_real_T(freq, i);
   freq->data[0] = totcumfreq->data[totcumfreq->size[0] - 1];
   for (i = 0; i <= idx - 2; i++) {
     freq->data[i + 1] = totcumfreq->data[totcumfreq->size[0] - 1] -
       totcumfreq->data[i];
   }
 
-  emxFree_real_T(&totcumfreq);
+  acemxFree_real_T(&totcumfreq);
   i = dInd->size[0];
   dInd->size[0] = D->size[0];
-  emxEnsureCapacity_boolean_T(dInd, i);
+  acemxEnsureCapacity_boolean_T(dInd, i);
   idx = D->size[0];
   for (i = 0; i < idx; i++) {
     dInd->data[i] = (D->data[i] > 0.0);
@@ -298,10 +298,10 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
     }
   }
 
-  emxInit_int32_T(&r3, 1);
+  acemxInit_int32_T(&r3, 1);
   i = r3->size[0];
   r3->size[0] = trueCount;
-  emxEnsureCapacity_int32_T(r3, i);
+  acemxEnsureCapacity_int32_T(r3, i);
   idx = 0;
   for (b_i = 0; b_i <= n; b_i++) {
     if (D->data[b_i] > 0.0) {
@@ -310,19 +310,19 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
     }
   }
 
-  emxInit_real_T(&b_x, 1);
+  acemxInit_real_T(&b_x, 1);
   i = b_x->size[0];
   b_x->size[0] = r3->size[0];
-  emxEnsureCapacity_real_T(b_x, i);
+  acemxEnsureCapacity_real_T(b_x, i);
   idx = r3->size[0];
   for (i = 0; i < idx; i++) {
     b_x->data[i] = x->data[r3->data[i] - 1];
   }
 
-  emxFree_int32_T(&r3);
+  acemxFree_int32_T(&r3);
   i = x->size[0];
   x->size[0] = b_x->size[0];
-  emxEnsureCapacity_real_T(x, i);
+  acemxEnsureCapacity_real_T(x, i);
   idx = b_x->size[0];
   for (i = 0; i < idx; i++) {
     x->data[i] = b_x->data[i];
@@ -346,7 +346,7 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
 
   i = D->size[0];
   D->size[0] = trueCount;
-  emxEnsureCapacity_real_T(D, i);
+  acemxEnsureCapacity_real_T(D, i);
   n = dInd->size[0] - 1;
   idx = 0;
   for (b_i = 0; b_i <= n; b_i++) {
@@ -356,15 +356,15 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
     }
   }
 
-  emxFree_boolean_T(&dInd);
+  acemxFree_boolean_T(&dInd);
   i = freq->size[0];
   freq->size[0] = trueCount;
-  emxEnsureCapacity_real_T(freq, i);
+  acemxEnsureCapacity_real_T(freq, i);
   for (i = 0; i < trueCount; i++) {
     freq->data[i] = 1.0 - D->data[i] / freq->data[i];
   }
 
-  emxFree_real_T(&D);
+  acemxFree_real_T(&D);
   if ((freq->size[0] != 1) && (freq->size[0] != 0) && (freq->size[0] != 1)) {
     i = freq->size[0];
     for (b_i = 0; b_i <= i - 2; b_i++) {
@@ -421,7 +421,7 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
 
     i = b_x->size[0];
     b_x->size[0] = x->size[0] + 1;
-    emxEnsureCapacity_real_T(b_x, i);
+    acemxEnsureCapacity_real_T(b_x, i);
     b_x->data[0] = ex;
     idx = x->size[0];
     for (i = 0; i < idx; i++) {
@@ -430,7 +430,7 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
 
     i = x->size[0];
     x->size[0] = b_x->size[0];
-    emxEnsureCapacity_real_T(x, i);
+    acemxEnsureCapacity_real_T(x, i);
     idx = b_x->size[0];
     for (i = 0; i < idx; i++) {
       x->data[i] = b_x->data[i];
@@ -438,7 +438,7 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
 
     i = Fout->size[0];
     Fout->size[0] = freq->size[0] + 1;
-    emxEnsureCapacity_real_T(Fout, i);
+    acemxEnsureCapacity_real_T(Fout, i);
     Fout->data[0] = 0.0;
     idx = freq->size[0];
     for (i = 0; i < idx; i++) {
@@ -447,15 +447,15 @@ void ecdf(const emxArray_real_T *y, const emxArray_boolean_T *varargin_2, const
   } else {
     i = Fout->size[0];
     Fout->size[0] = freq->size[0];
-    emxEnsureCapacity_real_T(Fout, i);
+    acemxEnsureCapacity_real_T(Fout, i);
     idx = freq->size[0];
     for (i = 0; i < idx; i++) {
       Fout->data[i] = freq->data[i];
     }
   }
 
-  emxFree_real_T(&b_x);
-  emxFree_real_T(&freq);
+  acemxFree_real_T(&b_x);
+  acemxFree_real_T(&freq);
 }
 
 /*

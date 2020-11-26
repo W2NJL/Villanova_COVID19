@@ -5,15 +5,15 @@
  * File: skewness.c
  *
  * MATLAB Coder version            : 5.0
- * C/C++ source code generated on  : 23-Oct-2020 11:12:36
+ * C/C++ source code generated on  : 23-Nov-2020 00:25:45
  */
 
 /* Include Files */
 #include "skewness.h"
+#include "ac_feat.h"
+#include "ac_feat_emxutil.h"
+#include "ac_feat_rtwutil.h"
 #include "bsxfun.h"
-#include "features.h"
-#include "features_emxutil.h"
-#include "features_rtwutil.h"
 #include "nan_sum_or_mean.h"
 #include "nanmean.h"
 #include "rt_nonfinite.h"
@@ -35,13 +35,13 @@ double skewness(const emxArray_real_T *x)
   if (x->size[0] == 0) {
     s = rtNaN;
   } else {
-    emxInit_real_T(&x0, 1);
-    emxInit_real_T(&xp, 1);
+    acemxInit_real_T(&x0, 1);
+    acemxInit_real_T(&xp, 1);
     nan_sum_or_mean(x, &m1, &n);
     bsxfun(x, m1, x0);
     i = xp->size[0];
     xp->size[0] = x0->size[0];
-    emxEnsureCapacity_real_T(xp, i);
+    acemxEnsureCapacity_real_T(xp, i);
     n = x0->size[0];
     for (i = 0; i < n; i++) {
       xp->data[i] = x0->data[i] * x0->data[i];
@@ -53,9 +53,9 @@ double skewness(const emxArray_real_T *x)
       xp->data[i] *= x0->data[i];
     }
 
-    emxFree_real_T(&x0);
-    s = nanmean(xp) / rt_powd_snf(m1, 1.5);
-    emxFree_real_T(&xp);
+    acemxFree_real_T(&x0);
+    s = nanmean(xp) / acrt_powd_snf(m1, 1.5);
+    acemxFree_real_T(&xp);
   }
 
   return s;

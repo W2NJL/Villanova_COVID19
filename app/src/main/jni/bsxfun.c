@@ -5,13 +5,13 @@
  * File: bsxfun.c
  *
  * MATLAB Coder version            : 5.0
- * C/C++ source code generated on  : 23-Oct-2020 11:12:36
+ * C/C++ source code generated on  : 23-Nov-2020 00:25:45
  */
 
 /* Include Files */
 #include "bsxfun.h"
-#include "features.h"
-#include "features_emxutil.h"
+#include "ac_feat.h"
+#include "ac_feat_emxutil.h"
 #include "rt_nonfinite.h"
 
 /* Function Definitions */
@@ -69,7 +69,7 @@ void b_bsxfun(const emxArray_real_T *a, const double b_data[], const int b_size
     c->size[1] = u1;
   }
 
-  emxEnsureCapacity_real_T(c, i);
+  acemxEnsureCapacity_real_T(c, i);
   if ((a->size[0] != 0) && (csz_idx_1 != 0)) {
     acoef = (a->size[1] != 1);
     bcoef = (b_size[1] != 1);
@@ -100,7 +100,7 @@ void bsxfun(const emxArray_real_T *a, double b, emxArray_real_T *c)
   int k;
   i = c->size[0];
   c->size[0] = a->size[0];
-  emxEnsureCapacity_real_T(c, i);
+  acemxEnsureCapacity_real_T(c, i);
   if (a->size[0] != 0) {
     acoef = (a->size[0] != 1);
     i = a->size[0] - 1;

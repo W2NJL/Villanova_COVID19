@@ -5,14 +5,14 @@
  * File: kurtosis.c
  *
  * MATLAB Coder version            : 5.0
- * C/C++ source code generated on  : 23-Oct-2020 11:12:36
+ * C/C++ source code generated on  : 23-Nov-2020 00:25:45
  */
 
 /* Include Files */
 #include "kurtosis.h"
+#include "ac_feat.h"
+#include "ac_feat_emxutil.h"
 #include "bsxfun.h"
-#include "features.h"
-#include "features_emxutil.h"
 #include "nan_sum_or_mean.h"
 #include "nanmean.h"
 #include "rt_nonfinite.h"
@@ -30,7 +30,7 @@ double kurtosis(const emxArray_real_T *x)
   double s2;
   int n;
   int i;
-  emxInit_real_T(&x0, 1);
+  acemxInit_real_T(&x0, 1);
   nan_sum_or_mean(x, &s2, &n);
   bsxfun(x, s2, x0);
   n = x0->size[0];
@@ -45,7 +45,7 @@ double kurtosis(const emxArray_real_T *x)
   }
 
   k = nanmean(x0) / (s2 * s2);
-  emxFree_real_T(&x0);
+  acemxFree_real_T(&x0);
   return k;
 }
 

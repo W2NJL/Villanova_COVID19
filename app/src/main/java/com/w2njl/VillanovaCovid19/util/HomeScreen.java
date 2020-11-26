@@ -38,7 +38,7 @@ import static com.w2njl.VillanovaCovid19.util.RISActivity.reff;
 public class HomeScreen extends AppCompatActivity implements LazyAdapter.clickInterface {
 
     static {
-        System.loadLibrary("native-lib15");
+        System.loadLibrary("native-lib17");
     }
 
     private static final String ratings_fileName = "ratingAgain";

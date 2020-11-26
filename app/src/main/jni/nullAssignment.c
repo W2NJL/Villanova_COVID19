@@ -5,13 +5,13 @@
  * File: nullAssignment.c
  *
  * MATLAB Coder version            : 5.0
- * C/C++ source code generated on  : 23-Oct-2020 11:12:36
+ * C/C++ source code generated on  : 23-Nov-2020 00:25:45
  */
 
 /* Include Files */
 #include "nullAssignment.h"
-#include "features.h"
-#include "features_emxutil.h"
+#include "ac_feat.h"
+#include "ac_feat_emxutil.h"
 #include "rt_nonfinite.h"
 
 /* Function Definitions */
@@ -51,7 +51,7 @@ void nullAssignment(emxArray_real_T *x, const emxArray_boolean_T *idx)
     x->size[0] = nxout;
   }
 
-  emxEnsureCapacity_real_T(x, i);
+  acemxEnsureCapacity_real_T(x, i);
 }
 
 /*

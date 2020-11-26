@@ -5,7 +5,7 @@
  * File: main.c
  *
  * MATLAB Coder version            : 5.0
- * C/C++ source code generated on  : 21-Sep-2020 22:35:40
+ * C/C++ source code generated on  : 05-Nov-2020 13:57:38
  */
 
 /*************************************************************************/
@@ -36,31 +36,40 @@
 /* Include Files */
 #include "main.h"
 #include "filtering.h"
+#include "filtering_emxAPI.h"
 #include "filtering_terminate.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "rt_nonfinite.h"
 
 /* Function Declarations */
-static void argInit_1x2411040_real_T(double result[2411040]);
+static emxArray_real_T *argInit_d2954760x1_real_T(void);
 static double argInit_real_T(void);
 static void main_filtering(void);
 
 /* Function Definitions */
 
 /*
- * Arguments    : double result[2411040]
- * Return Type  : void
+ * Arguments    : void
+ * Return Type  : emxArray_real_T *
  */
-static void argInit_1x2411040_real_T(double result[2411040])
+static emxArray_real_T *argInit_d2954760x1_real_T(void)
 {
-  int idx1;
+  emxArray_real_T *result;
+  static const int iv[1] = { 2 };
+
+  int idx0;
+
+  /* Set the size of the array.
+     Change this size to the value that the application requires. */
+  result = emxCreateND_real_T(1, iv);
 
   /* Loop over the array to initialize each element. */
-  for (idx1 = 0; idx1 < 2411040; idx1++) {
+  for (idx0 = 0; idx0 < result->size[0U]; idx0++) {
     /* Set the value of the array element.
        Change this value to the value that the application requires. */
-    result[idx1] = argInit_real_T();
+    result->data[idx0] = argInit_real_T();
   }
+
+  return result;
 }
 
 /*
@@ -78,14 +87,18 @@ static double argInit_real_T(void)
  */
 static void main_filtering(void)
 {
-  static double dv[2411040];
-  static double y_fil[2411040];
+  emxArray_real_T *y_fil;
+  emxArray_real_T *y_raw;
+  emxInitArray_real_T(&y_fil, 1);
 
   /* Initialize function 'filtering' input arguments. */
   /* Initialize function input argument 'y_raw'. */
+  y_raw = argInit_d2954760x1_real_T();
+
   /* Call the entry-point 'filtering'. */
-  argInit_1x2411040_real_T(dv);
-  filtering(dv, y_fil);
+  filtering(y_raw, argInit_real_T(), y_fil);
+  emxDestroyArray_real_T(y_fil);
+  emxDestroyArray_real_T(y_raw);
 }
 
 /*

@@ -5,7 +5,7 @@
  * File: sort.h
  *
  * MATLAB Coder version            : 5.0
- * C/C++ source code generated on  : 23-Oct-2020 11:12:36
+ * C/C++ source code generated on  : 16-Nov-2020 11:39:11
  */
 
 #ifndef SORT_H
@@ -15,10 +15,11 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include "rtwtypes.h"
-#include "features_types.h"
+#include "phase_sep_types.h"
 
 /* Function Declarations */
-extern void sort(emxArray_real_T *x, emxArray_int32_T *idx);
+extern void b_sort(emxArray_real_T *x);
+extern void sort(emxArray_int32_T *x);
 
 #endif
 

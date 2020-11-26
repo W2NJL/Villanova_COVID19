@@ -5,12 +5,12 @@
  * File: nanmean.c
  *
  * MATLAB Coder version            : 5.0
- * C/C++ source code generated on  : 23-Oct-2020 11:12:36
+ * C/C++ source code generated on  : 23-Nov-2020 00:25:45
  */
 
 /* Include Files */
 #include "nanmean.h"
-#include "features.h"
+#include "ac_feat.h"
 #include "rt_nonfinite.h"
 
 /* Function Definitions */

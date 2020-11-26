@@ -5,14 +5,14 @@
  * File: filtering_initialize.c
  *
  * MATLAB Coder version            : 5.0
- * C/C++ source code generated on  : 21-Sep-2020 22:35:40
+ * C/C++ source code generated on  : 05-Nov-2020 13:57:38
  */
 
 /* Include Files */
 #include "filtering_initialize.h"
 #include "filtering.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "filtering_data.h"
+#include "rt_nonfinite.h"
 
 /* Function Definitions */
 
@@ -22,6 +22,8 @@
  */
 void filtering_initialize(void)
 {
+  rt_InitInfAndNaN();
+  isInitialized_filtering = true;
 }
 
 /*

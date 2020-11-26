@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.w2njl.VillanovaCovid19.util.CovidFeatures;
 import com.w2njl.VillanovaCovid19.util.RISActivity;
 import com.w2njl.VillanovaCovid19.util.RISArchiveActivity;
+import com.w2njl.VillanovaCovid19.util.TestActivity;
 
 import org.apache.commons.math3.util.Precision;
 
@@ -29,11 +30,14 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import static com.w2njl.VillanovaCovid19.App.CHANNEL_1_ID;
 import static com.w2njl.VillanovaCovid19.App.CHANNEL_ID;
+import static com.w2njl.VillanovaCovid19.CovidRisk.addArray;
 import static com.w2njl.VillanovaCovid19.util.SettingsActivity.SHARED_PREFS;
 import static com.w2njl.VillanovaCovid19.util.SettingsActivity.SHARED_TEXT;
 
@@ -50,6 +54,13 @@ public class CovidService extends Service {
 
     private Thread thread;
     DatabaseReference reff = FirebaseDatabase.getInstance().getReference().child("Patient");
+    private double[] unboxed;
+    private double[] unboxed2;
+    //    boolean thread1Start;
+//    boolean thread2Start;
+//    private Thread thread1;
+//    private Thread thread2;
+    private double[] zz;
 
     public void onCreate() {
         super.onCreate();
@@ -120,6 +131,7 @@ public class CovidService extends Service {
                 {
 
                     generateCovid();
+                    loadfromC();
                     Log.d(TAG, "Job finished");
                     try
                     {
@@ -307,5 +319,51 @@ public class CovidService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void loadfromC(){
+
+        //Load in WAV file
+        Log.d(TAG, "loadfromC:  Start");
+        WavFile j = new WavFile("32mm.wav", this);
+
+        //Convert to ArrayList
+        ArrayList<Double> jz = j.getSamples();
+
+
+        Double[] dblArray = new Double[jz.size()];
+
+        //Convert to Double Array
+        dblArray = jz.toArray(dblArray);
+
+        unboxed = Stream.of(dblArray).mapToDouble(Double::doubleValue).toArray();
+        unboxed2 = Stream.of(dblArray).mapToDouble(Double::doubleValue).toArray();
+
+        //Store some features
+        zz = new double[2];
+
+        //Subtract the mean from the unfiltered data
+        double mean = 0;
+        for (int i=0; i<2890080; i++) {
+            mean = mean + unboxed[i];
+        }
+
+        mean = mean/2890080;
+
+        for(int z=0; z<2890080; z++){
+            unboxed[z] = unboxed[z] - mean;}
+
+
+        //Call C function
+        addArray(unboxed, zz);
+
+        Log.d(TAG, "loadfromC:  In elements: " + zz[0]);
+        Log.d(TAG, "loadfromC:  Out elements: " + zz[1]);
+
+
+//
+//        double max = Arrays.stream(unboxed).max().getAsDouble();
+//        double min = Arrays.stream(unboxed).min().getAsDouble();
     }
 }

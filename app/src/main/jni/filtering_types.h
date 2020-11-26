@@ -5,7 +5,7 @@
  * File: filtering_types.h
  *
  * MATLAB Coder version            : 5.0
- * C/C++ source code generated on  : 21-Sep-2020 22:35:40
+ * C/C++ source code generated on  : 05-Nov-2020 13:57:38
  */
 
 #ifndef FILTERING_TYPES_H
@@ -13,6 +13,28 @@
 
 /* Include Files */
 #include "rtwtypes.h"
+
+/* Type Definitions */
+#ifndef struct_emxArray_real_T
+#define struct_emxArray_real_T
+
+struct emxArray_real_T
+{
+  double *data;
+  int *size;
+  int allocatedSize;
+  int numDimensions;
+  bool canFreeData;
+};
+
+#endif                                 /*struct_emxArray_real_T*/
+
+#ifndef typedef_emxArray_real_T
+#define typedef_emxArray_real_T
+
+typedef struct emxArray_real_T emxArray_real_T;
+
+#endif                                 /*typedef_emxArray_real_T*/
 #endif
 
 /*

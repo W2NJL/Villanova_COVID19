@@ -2,7 +2,7 @@
 ## Makefile generated for MATLAB file/project 'filtering'. 
 ## 
 ## Makefile     : filtering_rtw.mk
-## Generated on : Mon Sep 21 22:35:49 2020
+## Generated on : Thu Nov 05 13:53:42 2020
 ## MATLAB Coder version: 5.0 (R2020a)
 ## 
 ## Build Info:
@@ -29,7 +29,7 @@ MATLAB_ROOT               = C:/PROGRA~1/MATLAB/R2020a
 MATLAB_BIN                = C:/PROGRA~1/MATLAB/R2020a/bin
 MATLAB_ARCH_BIN           = $(MATLAB_BIN)/win64
 MASTER_ANCHOR_DIR         = 
-START_DIR                 = C:/Users/ieedara/Desktop/Harman_files/codegen/lib/filtering
+START_DIR                 = C:/Users/ieedara/Desktop/Harman_files/09.29.2020/codegen/lib/filtering
 TGT_FCN_LIB               = ISO_C
 SOLVER_OBJ                = 
 CLASSIC_INTERFACE         = 0
@@ -133,34 +133,27 @@ ECHO                = @echo
 MV                  = @move
 RUN                 =
 
-#--------------------------------
-# "Debug" Build Configuration
-#--------------------------------
+#--------------------------------------
+# "Faster Runs" Build Configuration
+#--------------------------------------
 
-ARFLAGS              = ruvs \
-                       $(ARDEBUG)
+ARFLAGS              = ruvs
 CFLAGS               = -c $(MINGW_C_STANDARD_OPTS) -m64 \
-                       -O0 \
-                       $(CDEBUG)
+                       -O3 -fno-loop-optimize -fno-aggressive-loop-optimizations
 CPPFLAGS             = -c $(CPP_STANDARD_OPTS) -m64 -std=c++11 \
-                       -O0 \
-                       $(CPPDEBUG)
-CPP_LDFLAGS          = -Wl,-rpath,"$(MATLAB_ARCH_BIN)",-L"$(MATLAB_ARCH_BIN)" -static -m64 \
-                       $(CPPLDDEBUG)
+                       -O3 -fno-loop-optimize -fno-aggressive-loop-optimizations
+CPP_LDFLAGS          = -Wl,-rpath,"$(MATLAB_ARCH_BIN)",-L"$(MATLAB_ARCH_BIN)" -static -m64
 CPP_SHAREDLIB_LDFLAGS  = -shared -Wl,-rpath,"$(MATLAB_ARCH_BIN)",-L"$(MATLAB_ARCH_BIN)" -Wl,--no-undefined \
-                         $(CPPLDDEBUG) \
                          -Wl,--out-implib,$(basename $(PRODUCT)).lib
 DOWNLOAD_FLAGS       =
 EXECUTE_FLAGS        =
-LDFLAGS              = -Wl,-rpath,"$(MATLAB_ARCH_BIN)",-L"$(MATLAB_ARCH_BIN)" -static -m64 \
-                       $(LDDEBUG)
+LDFLAGS              = -Wl,-rpath,"$(MATLAB_ARCH_BIN)",-L"$(MATLAB_ARCH_BIN)" -static -m64
 MEX_CPPFLAGS         =
 MEX_CPPLDFLAGS       =
 MEX_CFLAGS           =
 MEX_LDFLAGS          =
 MAKE_FLAGS           = -f $(MAKEFILE)
 SHAREDLIB_LDFLAGS    = -shared -Wl,-rpath,"$(MATLAB_ARCH_BIN)",-L"$(MATLAB_ARCH_BIN)" -Wl,--no-undefined \
-                       $(LDDEBUG) \
                        -Wl,--out-implib,$(basename $(PRODUCT)).lib
 
 
@@ -195,7 +188,7 @@ DEFINES = $(DEFINES_) $(DEFINES_CUSTOM) $(DEFINES_STANDARD)
 ## SOURCE FILES
 ###########################################################################
 
-SRCS = $(START_DIR)/filtering_initialize.c $(START_DIR)/filtering_terminate.c $(START_DIR)/filtering.c
+SRCS = $(START_DIR)/rt_nonfinite.c $(START_DIR)/rtGetNaN.c $(START_DIR)/rtGetInf.c $(START_DIR)/filtering_rtwutil.c $(START_DIR)/filtering_data.c $(START_DIR)/filtering_initialize.c $(START_DIR)/filtering_terminate.c $(START_DIR)/filtering.c $(START_DIR)/butter.c $(START_DIR)/sqrt.c $(START_DIR)/lp2hp.c $(START_DIR)/xzgetrf.c $(START_DIR)/xgehrd.c $(START_DIR)/xnrm2.c $(START_DIR)/xdhseqr.c $(START_DIR)/xdlanv2.c $(START_DIR)/xzgeev.c $(START_DIR)/xzlartg.c $(START_DIR)/xzhgeqz.c $(START_DIR)/filtering_emxutil.c $(START_DIR)/filtering_emxAPI.c
 
 ALL_SRCS = $(SRCS)
 
@@ -203,7 +196,7 @@ ALL_SRCS = $(SRCS)
 ## OBJECTS
 ###########################################################################
 
-OBJS = filtering_initialize.obj filtering_terminate.obj filtering.obj
+OBJS = rt_nonfinite.obj rtGetNaN.obj rtGetInf.obj filtering_rtwutil.obj filtering_data.obj filtering_initialize.obj filtering_terminate.obj filtering.obj butter.obj sqrt.obj lp2hp.obj xzgetrf.obj xgehrd.obj xnrm2.obj xdhseqr.obj xdlanv2.obj xzgeev.obj xzlartg.obj xzhgeqz.obj filtering_emxutil.obj filtering_emxAPI.obj
 
 ALL_OBJS = $(OBJS)
 
@@ -338,12 +331,32 @@ $(PRODUCT) : $(OBJS) $(PREBUILT_OBJS)
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-%.obj : C:/Users/ieedara/Desktop/Harman_files/%.c
+%.obj : C:/Users/ieedara/Desktop/Harman_files/09.29.2020/%.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-%.obj : C:/Users/ieedara/Desktop/Harman_files/%.cpp
+%.obj : C:/Users/ieedara/Desktop/Harman_files/09.29.2020/%.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
+
+
+rt_nonfinite.obj : $(START_DIR)/rt_nonfinite.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+rtGetNaN.obj : $(START_DIR)/rtGetNaN.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+rtGetInf.obj : $(START_DIR)/rtGetInf.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+filtering_rtwutil.obj : $(START_DIR)/filtering_rtwutil.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+filtering_data.obj : $(START_DIR)/filtering_data.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
 filtering_initialize.obj : $(START_DIR)/filtering_initialize.c
@@ -355,6 +368,58 @@ filtering_terminate.obj : $(START_DIR)/filtering_terminate.c
 
 
 filtering.obj : $(START_DIR)/filtering.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+butter.obj : $(START_DIR)/butter.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+sqrt.obj : $(START_DIR)/sqrt.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+lp2hp.obj : $(START_DIR)/lp2hp.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+xzgetrf.obj : $(START_DIR)/xzgetrf.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+xgehrd.obj : $(START_DIR)/xgehrd.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+xnrm2.obj : $(START_DIR)/xnrm2.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+xdhseqr.obj : $(START_DIR)/xdhseqr.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+xdlanv2.obj : $(START_DIR)/xdlanv2.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+xzgeev.obj : $(START_DIR)/xzgeev.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+xzlartg.obj : $(START_DIR)/xzlartg.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+xzhgeqz.obj : $(START_DIR)/xzhgeqz.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+filtering_emxutil.obj : $(START_DIR)/filtering_emxutil.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+filtering_emxAPI.obj : $(START_DIR)/filtering_emxAPI.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 

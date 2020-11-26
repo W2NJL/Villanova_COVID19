@@ -5,20 +5,20 @@
  * File: mvksdensity.c
  *
  * MATLAB Coder version            : 5.0
- * C/C++ source code generated on  : 23-Oct-2020 11:12:36
+ * C/C++ source code generated on  : 23-Nov-2020 00:25:45
  */
 
 /* Include Files */
 #include "mvksdensity.h"
+#include "ac_feat.h"
+#include "ac_feat_data.h"
+#include "ac_feat_emxutil.h"
 #include "all.h"
 #include "any.h"
 #include "bsxfun.h"
 #include "diff.h"
 #include "ecdf.h"
 #include "exp.h"
-#include "features.h"
-#include "features_data.h"
-#include "features_emxutil.h"
 #include "isequal.h"
 #include "linspace.h"
 #include "log.h"
@@ -26,7 +26,7 @@
 #include "mtimes.h"
 #include "power.h"
 #include "rt_nonfinite.h"
-#include "sort.h"
+#include "featsort.h"
 #include "sum.h"
 #include <math.h>
 #include <string.h>
@@ -92,20 +92,20 @@ void mvksdensity(const emxArray_real_T *yData, double varargin_6, double fout
   emxArray_real_T *r3;
   emxArray_real_T *b_F;
   int b_f_size[2];
-  emxInit_boolean_T(&cens, 1);
+  acemxInit_boolean_T(&cens, 1);
   ximin = 1.0 / (double)yData->size[0];
   i = cens->size[0];
   cens->size[0] = yData->size[0];
-  emxEnsureCapacity_boolean_T(cens, i);
+  acemxEnsureCapacity_boolean_T(cens, i);
   loop_ub = yData->size[0];
   for (i = 0; i < loop_ub; i++) {
     cens->data[i] = rtIsNaN(yData->data[i]);
   }
 
-  emxInit_boolean_T(&r, 1);
+  acemxInit_boolean_T(&r, 1);
   any(cens, r);
   loop_ub = r->size[0];
-  emxFree_boolean_T(&cens);
+  acemxFree_boolean_T(&cens);
   for (i = 0; i < loop_ub; i++) {
     r->data[i] = !r->data[i];
   }
@@ -118,10 +118,10 @@ void mvksdensity(const emxArray_real_T *yData, double varargin_6, double fout
     }
   }
 
-  emxInit_boolean_T(&b_cens, 1);
+  acemxInit_boolean_T(&b_cens, 1);
   i = b_cens->size[0];
   b_cens->size[0] = trueCount;
-  emxEnsureCapacity_boolean_T(b_cens, i);
+  acemxEnsureCapacity_boolean_T(b_cens, i);
   jstart = 0;
   for (jend = 0; jend <= end; jend++) {
     if (r->data[jend]) {
@@ -138,10 +138,10 @@ void mvksdensity(const emxArray_real_T *yData, double varargin_6, double fout
     }
   }
 
-  emxInit_int32_T(&r1, 1);
+  acemxInit_int32_T(&r1, 1);
   i = r1->size[0];
   r1->size[0] = trueCount;
-  emxEnsureCapacity_int32_T(r1, i);
+  acemxEnsureCapacity_int32_T(r1, i);
   jstart = 0;
   for (jend = 0; jend <= end; jend++) {
     if (r->data[jend]) {
@@ -150,11 +150,11 @@ void mvksdensity(const emxArray_real_T *yData, double varargin_6, double fout
     }
   }
 
-  emxInit_real_T(&weight, 2);
+  acemxInit_real_T(&weight, 2);
   i = weight->size[0] * weight->size[1];
   weight->size[0] = 1;
   weight->size[1] = r1->size[0];
-  emxEnsureCapacity_real_T(weight, i);
+  acemxEnsureCapacity_real_T(weight, i);
   loop_ub = r1->size[0];
   for (i = 0; i < loop_ub; i++) {
     weight->data[i] = ximin;
@@ -168,10 +168,10 @@ void mvksdensity(const emxArray_real_T *yData, double varargin_6, double fout
     }
   }
 
-  emxInit_int32_T(&r2, 1);
+  acemxInit_int32_T(&r2, 1);
   i = r2->size[0];
   r2->size[0] = trueCount;
-  emxEnsureCapacity_int32_T(r2, i);
+  acemxEnsureCapacity_int32_T(r2, i);
   jstart = 0;
   for (jend = 0; jend <= end; jend++) {
     if (r->data[jend]) {
@@ -180,11 +180,11 @@ void mvksdensity(const emxArray_real_T *yData, double varargin_6, double fout
     }
   }
 
-  emxFree_boolean_T(&r);
-  emxInit_real_T(&b_yData, 1);
+  acemxFree_boolean_T(&r);
+  acemxInit_real_T(&b_yData, 1);
   i = b_yData->size[0];
   b_yData->size[0] = r2->size[0];
-  emxEnsureCapacity_real_T(b_yData, i);
+  acemxEnsureCapacity_real_T(b_yData, i);
   loop_ub = r2->size[0];
   for (i = 0; i < loop_ub; i++) {
     b_yData->data[i] = yData->data[r2->data[i] - 1];
@@ -194,7 +194,7 @@ void mvksdensity(const emxArray_real_T *yData, double varargin_6, double fout
   loop_ub = weight->size[0] * weight->size[1] - 1;
   i = weight->size[0] * weight->size[1];
   weight->size[0] = 1;
-  emxEnsureCapacity_real_T(weight, i);
+  acemxEnsureCapacity_real_T(weight, i);
   for (i = 0; i <= loop_ub; i++) {
     weight->data[i] /= ximin;
   }
@@ -205,33 +205,33 @@ void mvksdensity(const emxArray_real_T *yData, double varargin_6, double fout
     L = 0.0;
   }
 
-  emxInit_real_T(&F, 1);
-  emxInit_real_T(&ty, 1);
+  acemxInit_real_T(&F, 1);
+  acemxInit_real_T(&ty, 1);
   if (b_any(b_cens)) {
-    emxInit_real_T(&c_yData, 1);
+    acemxInit_real_T(&c_yData, 1);
     loop_ub = r2->size[0];
     i = c_yData->size[0];
     c_yData->size[0] = r2->size[0];
-    emxEnsureCapacity_real_T(c_yData, i);
+    acemxEnsureCapacity_real_T(c_yData, i);
     for (i = 0; i < loop_ub; i++) {
       c_yData->data[i] = b_yData->data[i];
     }
 
     i = b_yData->size[0];
     b_yData->size[0] = c_yData->size[0];
-    emxEnsureCapacity_real_T(b_yData, i);
+    acemxEnsureCapacity_real_T(b_yData, i);
     loop_ub = c_yData->size[0];
     for (i = 0; i < loop_ub; i++) {
       b_yData->data[i] = c_yData->data[i];
     }
 
-    emxFree_real_T(&c_yData);
+    acemxFree_real_T(&c_yData);
     ecdf(b_yData, b_cens, weight, F, ty);
     diff(F, b_yData);
     i = weight->size[0] * weight->size[1];
     weight->size[0] = 1;
     weight->size[1] = b_yData->size[0];
-    emxEnsureCapacity_real_T(weight, i);
+    acemxEnsureCapacity_real_T(weight, i);
     loop_ub = b_yData->size[0];
     for (i = 0; i < loop_ub; i++) {
       weight->data[i] = b_yData->data[i];
@@ -248,14 +248,14 @@ void mvksdensity(const emxArray_real_T *yData, double varargin_6, double fout
     loop_ub = end - i;
     end = F->size[0];
     F->size[0] = loop_ub;
-    emxEnsureCapacity_real_T(F, end);
+    acemxEnsureCapacity_real_T(F, end);
     for (end = 0; end < loop_ub; end++) {
       F->data[end] = ty->data[i + end];
     }
 
     i = ty->size[0];
     ty->size[0] = F->size[0];
-    emxEnsureCapacity_real_T(ty, i);
+    acemxEnsureCapacity_real_T(ty, i);
     loop_ub = F->size[0];
     for (i = 0; i < loop_ub; i++) {
       ty->data[i] = F->data[i];
@@ -263,17 +263,17 @@ void mvksdensity(const emxArray_real_T *yData, double varargin_6, double fout
   } else {
     i = ty->size[0];
     ty->size[0] = b_yData->size[0];
-    emxEnsureCapacity_real_T(ty, i);
+    acemxEnsureCapacity_real_T(ty, i);
     loop_ub = b_yData->size[0];
     for (i = 0; i < loop_ub; i++) {
       ty->data[i] = b_yData->data[i];
     }
   }
 
-  emxFree_int32_T(&r2);
-  emxFree_boolean_T(&b_cens);
+  acemxFree_int32_T(&r2);
+  acemxFree_boolean_T(&b_cens);
   ximin = minimum(ty) - 3.0 * varargin_6;
-  ximax = maximum(ty) + 3.0 * varargin_6;
+  ximax = b_maximum(ty) + 3.0 * varargin_6;
   if (!(L == rtMinusInf)) {
     if (L == 0.0) {
       ximin = exp(ximin);
@@ -498,11 +498,11 @@ void mvksdensity(const emxArray_real_T *yData, double varargin_6, double fout
     end = ty->size[0];
     b = ((!rtIsInf(L)) || (!(L < 0.0)));
     if (ty->size[0] * trueCount <= 30000) {
-      emxInit_real_T(&z, 2);
+      acemxInit_real_T(&z, 2);
       i = z->size[0] * z->size[1];
       z->size[0] = ty->size[0];
       z->size[1] = trueCount;
-      emxEnsureCapacity_real_T(z, i);
+      acemxEnsureCapacity_real_T(z, i);
       loop_ub = ty->size[0] * trueCount;
       for (i = 0; i < loop_ub; i++) {
         z->data[i] = 0.0;
@@ -516,8 +516,8 @@ void mvksdensity(const emxArray_real_T *yData, double varargin_6, double fout
         }
       }
 
-      emxInit_real_T(&f, 2);
-      power(z, f);
+      acemxInit_real_T(&f, 2);
+      b_power(z, f);
       loop_ub = f->size[0] * f->size[1];
       for (i = 0; i < loop_ub; i++) {
         f->data[i] *= -0.5;
@@ -539,7 +539,7 @@ void mvksdensity(const emxArray_real_T *yData, double varargin_6, double fout
         i = z->size[0] * z->size[1];
         z->size[0] = f->size[0];
         z->size[1] = f->size[1];
-        emxEnsureCapacity_real_T(z, i);
+        acemxEnsureCapacity_real_T(z, i);
         loop_ub = f->size[0] * f->size[1] - 1;
         for (i = 0; i <= loop_ub; i++) {
           z->data[i] = f->data[i];
@@ -551,23 +551,23 @@ void mvksdensity(const emxArray_real_T *yData, double varargin_6, double fout
       i = z->size[0] * z->size[1];
       z->size[0] = ty->size[0];
       z->size[1] = trueCount;
-      emxEnsureCapacity_real_T(z, i);
+      acemxEnsureCapacity_real_T(z, i);
       loop_ub = f->size[0] * f->size[1];
       for (i = 0; i < loop_ub; i++) {
         z->data[i] = f->data[i];
       }
 
-      emxFree_real_T(&f);
+      acemxFree_real_T(&f);
       mtimes(weight, z, b_xi_data, f_size);
-      emxFree_real_T(&z);
+      acemxFree_real_T(&z);
     } else {
-      emxInit_real_T(&b_weight, 2);
-      emxInit_int32_T(&iidx, 1);
-      sort(ty, iidx);
+      acemxInit_real_T(&b_weight, 2);
+      acemxInit_int32_T(&iidx, 1);
+      acb_sort(ty, iidx);
       i = b_weight->size[0] * b_weight->size[1];
       b_weight->size[0] = 1;
       b_weight->size[1] = iidx->size[0];
-      emxEnsureCapacity_real_T(b_weight, i);
+      acemxEnsureCapacity_real_T(b_weight, i);
       loop_ub = iidx->size[0];
       for (i = 0; i < loop_ub; i++) {
         b_weight->data[i] = weight->data[iidx->data[i] - 1];
@@ -581,18 +581,18 @@ void mvksdensity(const emxArray_real_T *yData, double varargin_6, double fout
 
       i = F->size[0];
       F->size[0] = trueCount;
-      emxEnsureCapacity_real_T(F, i);
+      acemxEnsureCapacity_real_T(F, i);
       for (i = 0; i < trueCount; i++) {
         F->data[i] = txi_data[i];
       }
 
-      sort(F, iidx);
+      acb_sort(F, iidx);
       jstart = 1;
       jend = 1;
       ximax = 4.0 * varargin_6;
-      emxInit_real_T(&nearby, 2);
-      emxInit_real_T(&r3, 1);
-      emxInit_real_T(&b_F, 1);
+      acemxInit_real_T(&nearby, 2);
+      acemxInit_real_T(&r3, 1);
+      acemxInit_real_T(&b_F, 1);
       for (k = 0; k < trueCount; k++) {
         ximin = F->data[k] - ximax;
         while ((ty->data[jstart - 1] < ximin) && (jstart < end)) {
@@ -613,7 +613,7 @@ void mvksdensity(const emxArray_real_T *yData, double varargin_6, double fout
           nearby->size[0] = 1;
           loop_ub = jend - jstart;
           nearby->size[1] = loop_ub + 1;
-          emxEnsureCapacity_real_T(nearby, i);
+          acemxEnsureCapacity_real_T(nearby, i);
           for (i = 0; i <= loop_ub; i++) {
             nearby->data[i] = jstart + i;
           }
@@ -621,47 +621,50 @@ void mvksdensity(const emxArray_real_T *yData, double varargin_6, double fout
 
         i = b_F->size[0];
         b_F->size[0] = nearby->size[1];
-        emxEnsureCapacity_real_T(b_F, i);
+        acemxEnsureCapacity_real_T(b_F, i);
         loop_ub = nearby->size[1];
         for (i = 0; i < loop_ub; i++) {
           b_F->data[i] = (F->data[k] - ty->data[(int)nearby->data[i] - 1]) /
             varargin_6;
         }
 
-        b_power(b_F, r3);
+        power(b_F, r3);
+        i = b_F->size[0];
+        b_F->size[0] = r3->size[0];
+        acemxEnsureCapacity_real_T(b_F, i);
         loop_ub = r3->size[0];
         for (i = 0; i < loop_ub; i++) {
-          r3->data[i] *= -0.5;
+          b_F->data[i] = -0.5 * r3->data[i];
         }
 
-        c_exp(r3);
+        c_exp(b_F);
         ximin = 0.0;
         loop_ub = nearby->size[1];
         for (i = 0; i < loop_ub; i++) {
-          ximin += b_weight->data[(int)nearby->data[i] - 1] * (r3->data[i] /
+          ximin += b_weight->data[(int)nearby->data[i] - 1] * (b_F->data[i] /
             2.5066282746310002);
         }
 
         b_xi_data[k] = ximin;
       }
 
-      emxFree_real_T(&b_F);
-      emxFree_real_T(&r3);
-      emxFree_real_T(&nearby);
-      emxFree_real_T(&b_weight);
+      acemxFree_real_T(&b_F);
+      acemxFree_real_T(&r3);
+      acemxFree_real_T(&nearby);
+      acemxFree_real_T(&b_weight);
       i = r1->size[0];
       r1->size[0] = iidx->size[0];
-      emxEnsureCapacity_int32_T(r1, i);
+      acemxEnsureCapacity_int32_T(r1, i);
       loop_ub = iidx->size[0];
       for (i = 0; i < loop_ub; i++) {
         r1->data[i] = iidx->data[i];
       }
 
-      emxFree_int32_T(&iidx);
+      acemxFree_int32_T(&iidx);
       loop_ub = r1->size[0];
       i = b_yData->size[0];
       b_yData->size[0] = r1->size[0];
-      emxEnsureCapacity_real_T(b_yData, i);
+      acemxEnsureCapacity_real_T(b_yData, i);
       for (i = 0; i < loop_ub; i++) {
         b_yData->data[i] = b_xi_data[i];
       }
@@ -696,11 +699,11 @@ void mvksdensity(const emxArray_real_T *yData, double varargin_6, double fout
     }
   }
 
-  emxFree_real_T(&ty);
-  emxFree_real_T(&F);
-  emxFree_int32_T(&r1);
-  emxFree_real_T(&weight);
-  emxFree_real_T(&b_yData);
+  acemxFree_real_T(&ty);
+  acemxFree_real_T(&F);
+  acemxFree_int32_T(&r1);
+  acemxFree_real_T(&weight);
+  acemxFree_real_T(&b_yData);
   loop_ub = end - 1;
   for (i = 0; i <= loop_ub; i++) {
     f_data[i] /= varargin_6;

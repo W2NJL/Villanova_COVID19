@@ -1,3 +1,5 @@
+@echo off
+
 @if not "%MINGW_ROOT%" == "" (@set "PATH=%PATH%;%MINGW_ROOT%")
 
 cd .

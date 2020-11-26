@@ -5,63 +5,72 @@
  * File: filtering.c
  *
  * MATLAB Coder version            : 5.0
- * C/C++ source code generated on  : 21-Sep-2020 22:35:40
+ * C/C++ source code generated on  : 05-Nov-2020 13:57:38
  */
 
 /* Include Files */
 #include "filtering.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "butter.h"
+#include "filtering_data.h"
+#include "filtering_emxutil.h"
+#include "filtering_initialize.h"
+#include "rt_nonfinite.h"
 
 /* Function Definitions */
 
 /*
- * function [y_fil]= filtering(y_raw)
- * Arguments    : const double y_raw[2411040]
- *                double y_fil[2411040]
+ * Arguments    : const emxArray_real_T *y_raw
+ *                double Fs
+ *                emxArray_real_T *y_fil
  * Return Type  : void
  */
-void filtering(const double y_raw[2411040], double y_fil[2411040])
+void filtering(const emxArray_real_T *y_raw, double Fs, emxArray_real_T *y_fil)
 {
-  int k;
+  double num[7];
+  double den[7];
+  int nx;
+  int loop_ub;
   int naxpy;
+  int k;
   int j;
   int y_fil_tmp;
-  static const double dv[7] = { 0.85918007665512053, -5.1550804599307227,
-    12.887701149826809, -17.183601533102411, 12.887701149826809,
-    -5.1550804599307227, 0.85918007665512053 };
-
   double as;
-  static const double dv1[7] = { 1.0, -5.6965607253643142, 13.528498994105979,
-    -17.144063240960978, 12.227073155879228, -4.6531383854961241,
-    0.73819040412109915 };
+  if (!isInitialized_filtering) {
+    filtering_initialize();
+  }
 
-  /* 'filtering:3' [num,den] = butter(6,[200]/8000,'high') ; */
-  /* 'filtering:4' y_fil=filter(num,den,y_raw); */
-  memset(&y_fil[0], 0, 2411040U * sizeof(double));
-  for (k = 0; k < 2411040; k++) {
-    if (2411040 - k < 7) {
-      naxpy = 2411039 - k;
+  butter(200.0 / (Fs / 2.0), num, den);
+  nx = y_raw->size[0] - 1;
+  loop_ub = y_raw->size[0];
+  naxpy = y_fil->size[0];
+  y_fil->size[0] = y_raw->size[0];
+  emxEnsureCapacity_real_T(y_fil, naxpy);
+  for (naxpy = 0; naxpy < loop_ub; naxpy++) {
+    y_fil->data[naxpy] = 0.0;
+  }
+
+  for (k = 0; k <= nx; k++) {
+    loop_ub = nx - k;
+    naxpy = loop_ub + 1;
+    if (naxpy >= 7) {
+      naxpy = 7;
+    }
+
+    for (j = 0; j < naxpy; j++) {
+      y_fil_tmp = k + j;
+      y_fil->data[y_fil_tmp] += y_raw->data[k] * num[j];
+    }
+
+    if (loop_ub < 6) {
+      naxpy = loop_ub;
     } else {
       naxpy = 6;
     }
 
-    for (j = 0; j <= naxpy; j++) {
-      y_fil_tmp = k + j;
-      y_fil[y_fil_tmp] += y_raw[k] * dv[j];
-    }
-
-    if (2411039 - k < 6) {
-      naxpy = 2411038 - k;
-    } else {
-      naxpy = 5;
-    }
-
-    as = -y_fil[k];
-    for (j = 0; j <= naxpy; j++) {
+    as = -y_fil->data[k];
+    for (j = 0; j < naxpy; j++) {
       y_fil_tmp = (k + j) + 1;
-      y_fil[y_fil_tmp] += as * dv1[j + 1];
+      y_fil->data[y_fil_tmp] += as * den[j + 1];
     }
   }
 }

@@ -5,7 +5,7 @@
  * File: sortIdx.h
  *
  * MATLAB Coder version            : 5.0
- * C/C++ source code generated on  : 23-Oct-2020 11:12:36
+ * C/C++ source code generated on  : 16-Nov-2020 11:39:11
  */
 
 #ifndef SORTIDX_H
@@ -15,10 +15,15 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include "rtwtypes.h"
-#include "features_types.h"
+#include "phase_sep_types.h"
 
 /* Function Declarations */
-extern void sortIdx(emxArray_real_T *x, emxArray_int32_T *idx);
+extern void b_merge_block(emxArray_int32_T *idx, emxArray_real_T *x, int offset,
+  int n, int preSortLevel, emxArray_int32_T *iwork, emxArray_real_T *xwork);
+extern void b_merge_pow2_block(emxArray_int32_T *idx, emxArray_real_T *x, int
+  offset);
+extern void b_sortIdx(emxArray_int32_T *x, emxArray_int32_T *idx);
+extern void sortIdx(const emxArray_real_T *x, emxArray_int32_T *idx);
 
 #endif
 

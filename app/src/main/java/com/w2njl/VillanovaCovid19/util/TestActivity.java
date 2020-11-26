@@ -38,11 +38,11 @@ import static com.w2njl.VillanovaCovid19.CovidRisk.addArray;
 public class TestActivity extends AppCompatActivity {
 
     private static final String TAG = "TestActivity";
-//    private Handler mainHandler = new Handler();
+    //    private Handler mainHandler = new Handler();
 //    private Handler mainHandler2 = new Handler();
     private double[] unboxed;
     private double[] unboxed2;
-//    boolean thread1Start;
+    //    boolean thread1Start;
 //    boolean thread2Start;
 //    private Thread thread1;
 //    private Thread thread2;
@@ -164,11 +164,21 @@ public class TestActivity extends AppCompatActivity {
 
         zz = new double[4];
 
+          double mean = 0;
+   for (int i=0; i<2890080; i++) {
+       mean = mean + unboxed[i];
+   }
+
+    mean = mean/2890080;
+
+  for(int z=0; z<2890080; z++){
+        unboxed[z] = unboxed[z] - mean;}
 
 
-        addArray(unboxed, zz);
+//
+//        addArray(unboxed, zz);
 
-
+//        Toast.makeText(TestActivity.this, "The thing is is: " + unboxed[0], Toast.LENGTH_LONG).show();
 
         double max = Arrays.stream(unboxed).max().getAsDouble();
         double min = Arrays.stream(unboxed).min().getAsDouble();

@@ -5,13 +5,13 @@
  * File: any.c
  *
  * MATLAB Coder version            : 5.0
- * C/C++ source code generated on  : 23-Oct-2020 11:12:36
+ * C/C++ source code generated on  : 23-Nov-2020 00:25:45
  */
 
 /* Include Files */
 #include "any.h"
-#include "features.h"
-#include "features_emxutil.h"
+#include "ac_feat.h"
+#include "ac_feat_emxutil.h"
 #include "rt_nonfinite.h"
 
 /* Function Definitions */
@@ -32,7 +32,7 @@ void any(const emxArray_boolean_T *x, emxArray_boolean_T *y)
   bool exitg1;
   iy = y->size[0];
   y->size[0] = x->size[0];
-  emxEnsureCapacity_boolean_T(y, iy);
+  acemxEnsureCapacity_boolean_T(y, iy);
   vstride = x->size[0];
   for (iy = 0; iy < vstride; iy++) {
     y->data[iy] = false;
