@@ -25,11 +25,13 @@ import com.google.android.gms.ads.AdRequest.Builder;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.auth.FirebaseAuth;
 import com.w2njl.VillanovaCovid19.adapters.LazyAdapter;
 import com.w2njl.VillanovaCovid19.models.RowItem;
 import com.w2njl.VillanovaCovid19.util.RISActivity;
 import com.w2njl.VillanovaCovid19.util.RISArchiveActivity;
 import com.w2njl.VillanovaCovid19.util.SettingsActivity;
+import com.w2njl.VillanovaCovid19.util.UserProfile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,6 +124,13 @@ public class MainActivity extends AppCompatActivity implements LazyAdapter.click
                 break;
             case R.id.actionFeedback:
                 sendFeedBack();
+                break;
+            case R.id.actionLogout:
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                break;
+            case R.id.actionUser:
+                startActivity(new Intent(MainActivity.this, UserProfile.class));
                 break;
 
         }

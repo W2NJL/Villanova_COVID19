@@ -13,11 +13,19 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/villanovanew2_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        >
-        <activity android:name=".util.RISMonthArchiveActivity"></activity>
+        android:theme="@style/AppTheme">
+        <activity android:name=".util.ForgotPassword"></activity>
+        <activity android:name=".util.UserProfile" />
+        <activity android:name=".RegisterUser" />
+        <activity android:name=".LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".util.RISMonthArchiveActivity" />
         <activity android:name=".util.RISWeekArchiveActivity" />
-        <activity android:name=".RISMonthActivity" />
         <activity
             android:name=".util.SettingsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -39,13 +47,7 @@
             android:name=".util.HomeScreen"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateAlwaysHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="com.github.pdfviewer.PDFViewActivity"
             android:theme="@style/CustomActivityThemeNoTitle" />

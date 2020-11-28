@@ -37,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,6 +50,7 @@ import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.w2njl.VillanovaCovid19.CovidService;
+import com.w2njl.VillanovaCovid19.LoginActivity;
 import com.w2njl.VillanovaCovid19.R;
 
 import org.apache.commons.math3.util.Precision;
@@ -71,6 +73,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import io.paperdb.Paper;
 
 import static com.w2njl.VillanovaCovid19.CovidService.running;
 import static com.w2njl.VillanovaCovid19.CovidService.serviceTime;
@@ -588,6 +592,13 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
                 break;
             case R.id.actionFeedback:
                 sendFeedBack();
+                break;
+            case R.id.actionLogout:
+                Paper.book().destroy();
+                startActivity(new Intent(RISActivity.this, LoginActivity.class));
+                break;
+            case R.id.actionUser:
+                startActivity(new Intent(RISActivity.this, UserProfile.class));
                 break;
 
         }

@@ -201,8 +201,8 @@ Java_com_w2njl_VillanovaCovid19_CovidRisk_addArray(JNIEnv *env, jclass clazz,
         dv2[i] = arr[i];
 
     //Wrap double arrays in EMX array
-    rawInputs = emxCreateWrapper_real_T(dv2, size, 1);
-    filteredOutputs = emxCreateWrapper_real_T(y_fil, size, 1);
+    rawInputs = emxCreateWrapper_real_T(dv2, 960000, 1);
+    filteredOutputs = emxCreateWrapper_real_T(y_fil, 960000, 1);
 
     //Call the filtering function
     filtering(rawInputs, 16000, filteredOutputs);

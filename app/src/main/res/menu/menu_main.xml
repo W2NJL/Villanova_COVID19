@@ -6,9 +6,18 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
     <item
+        android:id="@+id/actionUser"
+        android:title="@string/action_user"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/actionFeedback"
         android:title="@string/feedback"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/actionLogout"
+        android:title="@string/logout"
+        app:showAsAction="never" />
+
     <item
         android:visible="false"
         android:id="@+id/action_policy"

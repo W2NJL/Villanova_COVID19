@@ -150,6 +150,8 @@
                 app:adUnitId="@string/banner_ad_id" />
 
 
+
+
         </RelativeLayout>
     </LinearLayout>
 

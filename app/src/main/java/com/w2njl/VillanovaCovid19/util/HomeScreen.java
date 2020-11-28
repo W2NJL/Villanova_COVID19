@@ -16,14 +16,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.w2njl.VillanovaCovid19.ConnectionDetector;
 import com.w2njl.VillanovaCovid19.MainActivity;
 import com.w2njl.VillanovaCovid19.R;
@@ -54,6 +61,11 @@ public class HomeScreen extends AppCompatActivity implements LazyAdapter.clickIn
     LazyAdapter lazyAdapter;
     RecyclerView listView;
     Toolbar toolbar;
+    TextView greeting;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
+    private DatabaseReference reference;
+    private String userId;
 
     ConnectionDetector cd;
     boolean interstitialCanceled;
@@ -66,9 +78,9 @@ public class HomeScreen extends AppCompatActivity implements LazyAdapter.clickIn
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_home_screen);
         MobileAds.initialize(this);
-        init();
         initDB();
-        ratePrefs = getSharedPreferences(ratings_fileName, 0);
+        init();
+                ratePrefs = getSharedPreferences(ratings_fileName, 0);
         ((AdView) findViewById(R.id.adView)).loadAd(new AdRequest.Builder().build());
         listView = findViewById(R.id.myList);
         rowItems = new ArrayList<>();
@@ -82,10 +94,35 @@ public class HomeScreen extends AppCompatActivity implements LazyAdapter.clickIn
         listView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
         listView.setAdapter(lazyAdapter);
         lazyAdapter.setListeners(this);
+
+        reference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User userProfile = snapshot.getValue(User.class);
+
+                if (userProfile != null){
+                    String fullName = userProfile.fullName;
+                    String email = userProfile.email;
+                    String age = userProfile.age;
+
+                   greeting.setText("Welcome, " + fullName + "!");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(HomeScreen.this, "Something wrong happened!", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void init() {
+        mAuth = FirebaseAuth.getInstance();
         toolbar = findViewById(R.id.toolbar);
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("Users");
+        userId = user.getUid();
+        greeting = findViewById(R.id.greeting);
         setSupportActionBar(toolbar);
         setTitle(getResources().getString(R.string.app_name));
     }
