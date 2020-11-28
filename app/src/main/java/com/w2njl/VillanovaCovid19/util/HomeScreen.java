@@ -81,7 +81,7 @@ public class HomeScreen extends AppCompatActivity implements LazyAdapter.clickIn
         initDB();
         init();
                 ratePrefs = getSharedPreferences(ratings_fileName, 0);
-        ((AdView) findViewById(R.id.adView)).loadAd(new AdRequest.Builder().build());
+//        ((AdView) findViewById(R.id.adView)).loadAd(new AdRequest.Builder().build());
         listView = findViewById(R.id.myList);
         rowItems = new ArrayList<>();
         String[] strArr = {getResources().getString(R.string.villanova), getResources().getString(R.string.health)};

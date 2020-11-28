@@ -14,15 +14,19 @@
         android:roundIcon="@mipmap/villanovanew2_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".util.ForgotPassword"></activity>
-        <activity android:name=".util.UserProfile" />
-        <activity android:name=".RegisterUser" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".util.LaunchScreen"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".util.ForgotPassword" />
+        <activity android:name=".util.UserProfile" />
+        <activity android:name=".RegisterUser" />
+        <activity android:name=".LoginActivity">
+
         </activity>
         <activity android:name=".util.RISMonthArchiveActivity" />
         <activity android:name=".util.RISWeekArchiveActivity" />

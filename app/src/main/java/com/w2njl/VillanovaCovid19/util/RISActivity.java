@@ -99,6 +99,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
        private Intent mIntent;
     Query lastQuery;
     File imagePath;
+    Boolean init = false;
 
 
 
@@ -135,6 +136,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
         btnGraph = findViewById(R.id.btnViewSound);
         btnShare = findViewById(R.id.btnShare);
         btnMonitoring = findViewById(R.id.btnMonitoring);
+
 //        if(!running) {
 //            btnMonitoring.setText(R.string.startmonitoring);
 //            btnMonitoring.setTag(1);
@@ -219,6 +221,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
 
 
             initViews();
+
             setData(patient1);
             myCustomSnackbar(patient1);
 
@@ -490,8 +493,9 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
     private void initDB() {
 
         reff = FirebaseDatabase.getInstance().getReference().child("Patient");
-        reff.keepSynced(true);
         lastQuery = reff.orderByKey().limitToLast(1);
+        reff.keepSynced(true);
+
 
 
     }
@@ -531,6 +535,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
 
         txtRIS.setText(String.valueOf(covid.getRIS()));
         txtHR.setText(String.valueOf(covid.getHR()) + " bpm");
+        init = true;
         txtTemp.setText(String.valueOf(covid.getTemp()) + "\u00B0F");
         txtRR.setText(String.valueOf(covid.getRR()));
         txtTV.setText(String.valueOf(covid.getTV()));
@@ -594,6 +599,9 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
                 sendFeedBack();
                 break;
             case R.id.actionLogout:
+                if(running){
+                    stopService(mIntent);
+                }
                 Paper.book().destroy();
                 startActivity(new Intent(RISActivity.this, LoginActivity.class));
                 break;
@@ -954,6 +962,9 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
         if (!running) {
             btnMonitoring.setText(R.string.startmonitoring);
             btnMonitoring.setTag(1);
+            init();
+            initDB();
+            initViews();
         } else {
 
             btnMonitoring.setText(R.string.stopmonitoring);
@@ -974,12 +985,15 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
             }, timeDiff, 60, TimeUnit.SECONDS);
 
 
-
+            if(txtRR.getText().toString() == ""){
+                initDB();
+                initViews();
+                Log.d(TAG, "onResume: HOLLA");}
 
         }
-        init();
-        initDB();
-        initViews();
+
+
+
         super.onResume();
     }
 

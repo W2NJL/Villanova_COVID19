@@ -131,7 +131,7 @@ public class CovidService extends Service {
                 {
 
                     generateCovid();
-                    loadfromC();
+
                     Log.d(TAG, "Job finished");
                     try
                     {
@@ -162,6 +162,7 @@ public class CovidService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void generateCovid() {
 
+        loadfromC();
         CovidFeatures patient1 = initCovidData();
         reff.push().setValue(patient1);
 
@@ -207,7 +208,7 @@ public class CovidService extends Service {
         double temp = 96.4 + (102.5 - 96.4) * random.nextDouble();
         int spO2 = random.nextInt(99 - 87) + 87;
         int TV = random.nextInt(10000 - 5000) + 5000;
-        int RR = random.nextInt(20 - 10) + 10;
+        int RR = (int) ((int) zz[0] + zz[1]);
 
 
         temp = Precision.round(temp, 1);
