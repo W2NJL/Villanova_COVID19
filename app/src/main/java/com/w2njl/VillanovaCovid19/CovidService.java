@@ -3,11 +3,14 @@ package com.w2njl.VillanovaCovid19;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.IBinder;
 import android.telephony.SmsManager;
@@ -47,6 +50,7 @@ public class CovidService extends Service {
 
     private static final String TAG = "ExampleJobService";
     public static boolean running;
+    public static boolean finished = false;
     public static long serviceTime;
     public static long serviceInterval;
     public static final String SHARED_PREFS_SMS = "sharedPrefSMS";
@@ -178,6 +182,7 @@ public class CovidService extends Service {
         loadfromC();
         CovidFeatures patient1 = initCovidData();
         reff.push().setValue(patient1);
+        finished = true;
 
         Intent notificationIntent = new Intent(this, RISActivity.class);
 
@@ -206,9 +211,9 @@ public class CovidService extends Service {
             startForeground(2, notificationAlert);
 
 
-            if(alertingSMS == true && tel != null) {
+            if(alertingSMS == true && tel != null && isNetworkAvailable()) {
                 SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage(tel, null, "My Covid risk is\n"+patient1.getDanger() ,  null, null);
+                smsManager.sendTextMessage(tel, null, "My Covid risk is\n"+patient1.getDanger()+", with an RIS score of " + patient1.getRIS() + "\nHR of " + patient1.getHR() + " bpm" + "\nO2 level of  " + patient1.getSpO2() +"%" + "\nTemperature of " + patient1.getTemp() +  "\u00B0F",  null, null);
             }
         }
 
@@ -383,5 +388,13 @@ public class CovidService extends Service {
 //
 //        double max = Arrays.stream(unboxed).max().getAsDouble();
 //        double min = Arrays.stream(unboxed).min().getAsDouble();
+    }
+
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

@@ -187,11 +187,11 @@ else {
 
         switch ((int) temp ){
             case 0:
-                editor.putLong(SHARED_TEXT, 60000);
+                editor.putLong(SHARED_TEXT, 0);
 
                 editor.apply();
 
-                Toast.makeText(SettingsActivity.this, "You have changed the RIS interval to 1 minute", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SettingsActivity.this, "You have changed the RIS interval to 3 minutes", Toast.LENGTH_SHORT).show();
                 break;
             case 30:
                 temp = 60 * 1000 * temp;

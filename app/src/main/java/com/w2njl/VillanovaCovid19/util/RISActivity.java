@@ -76,6 +76,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.paperdb.Paper;
 
+import static com.w2njl.VillanovaCovid19.CovidService.finished;
 import static com.w2njl.VillanovaCovid19.CovidService.running;
 import static com.w2njl.VillanovaCovid19.CovidService.serviceTime;
 
@@ -87,6 +88,9 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
 
     private TextView txtRIS, txtHR, txtSpO2, txtTemp, txtTV, txtRR, txtRisk, txtTimeStamp;
     private Button btnGraph, btnShare, btnArchive, btnMonitoring;
+    boolean suppressed = false;
+    int lastRIS;
+    boolean hasShown = false;
     
     Toolbar toolbar;
     public static DatabaseReference reff = null;
@@ -223,7 +227,8 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
             initViews();
 
             setData(patient1);
-            myCustomSnackbar(patient1);
+
+
 
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -544,11 +549,12 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
         txtTimeStamp.setText("RIS sample taken on " + month + " " + String.valueOf(d) +", " + String.valueOf(year) + " at " + String.valueOf(hour) + ":" + realMinute
         + ":" + realSeconds);
 
-        if(!running){
+        if(!running && !hasShown){
         Toast toast = Toast.makeText(this, "Your last RIS reading was taken on\n" + month + " " + String.valueOf(d) +", " + String.valueOf(year) + " at " + String.valueOf(hour) + ":" + realMinute
                 + ":" + realSeconds + "\nwith a risk level of " + covid.getDanger(), Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();}
+            toast.show();
+        hasShown = true; }
 
         setDangerColor(txtRisk, covid);
 
@@ -602,6 +608,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
                 if(running){
                     stopService(mIntent);
                 }
+                Paper.init(this);
                 Paper.book().destroy();
                 startActivity(new Intent(RISActivity.this, LoginActivity.class));
                 break;
@@ -710,7 +717,14 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
                     setData(patient1);
 
 
-                    myCustomSnackbar(patient1);
+                    if(running && finished && RIS != lastRIS){
+                        myCustomSnackbar(patient1);
+                    lastRIS = RIS; }
+                    else
+                    if(running && !suppressed) {
+                        myCustomSnackbar2();
+                        suppressed = true;
+                    }
                     lastQuery.removeEventListener(this);
                 }
 
@@ -935,6 +949,52 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
         snackbar.show();
     }
 
+    public void myCustomSnackbar2() {
+
+        String message2 = "COVID-19 monitoring is now active.";
+        // Create the Snackbar
+        LinearLayout.LayoutParams objLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        snackbar = Snackbar.make(this.findViewById(android.R.id.content), message2, Snackbar.LENGTH_INDEFINITE);
+
+        // Get the Snackbar layout view
+        Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) snackbar.getView();
+
+        // Set snackbar layout params
+        int navbarHeight = getNavBarHeight(this);
+        FrameLayout.LayoutParams parentParams = (FrameLayout.LayoutParams) layout.getLayoutParams();
+        parentParams.setMargins(0, 0, 0, 0 - navbarHeight );
+        layout.setLayoutParams(parentParams);
+        layout.setPadding(0, 0, 0, 0);
+        layout.setLayoutParams(parentParams);
+
+        // Inflate our custom view
+        View snackView = getLayoutInflater().inflate(R.layout.my_snackbar2, null);
+
+        // Configure our custom view
+
+        TextView messageTextView2 = (TextView) snackView.findViewById(R.id.message_text_view2);
+        messageTextView2.setText(message2);
+
+
+
+
+        TextView textViewTwo = (TextView) snackView.findViewById(R.id.second_text_view);
+        textViewTwo.setText("Dismiss");
+        textViewTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("Deny", "showTwoButtonSnackbar() : deny clicked");
+                snackbar.dismiss();
+            }
+        });
+
+        // Add our custom view to the Snackbar's layout
+        layout.addView(snackView, objLayoutParams);
+
+        // Show the Snackbar
+        snackbar.show();
+    }
+
     public static int getNavBarHeight(Context context) {
         int result = 0;
         int resourceId = context.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
@@ -953,7 +1013,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
                 startService(mIntent);
 //        graph.removeAllSeries();
 
-        exec = Executors.newSingleThreadScheduledExecutor();         exec.scheduleAtFixedRate(() -> {             initViews();      }, 1, 60, TimeUnit.SECONDS);
+        exec = Executors.newSingleThreadScheduledExecutor();         exec.scheduleAtFixedRate(() -> {             initViews();      }, 1, 10, TimeUnit.SECONDS);
 
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -982,7 +1042,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
             exec = Executors.newSingleThreadScheduledExecutor();
             exec.scheduleAtFixedRate(() -> {
                 initViews();
-            }, timeDiff, 60, TimeUnit.SECONDS);
+            }, 1, 10, TimeUnit.SECONDS);
 
 
             if(txtRR.getText().toString() == ""){

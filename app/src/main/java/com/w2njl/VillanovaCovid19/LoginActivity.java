@@ -60,8 +60,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setTheme(R.style.BlueTheme);
-        setContentView(R.layout.activity_login);
+                setContentView(R.layout.activity_login);
 //        ((AdView) findViewById(R.id.adView)).loadAd(new AdRequest.Builder().build());
 
         init();
