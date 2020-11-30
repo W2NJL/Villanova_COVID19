@@ -8,6 +8,7 @@
     <string name="action_about">About</string>
     <string name="action_important">Rate</string>
     <string name="activity">Activity</string>
+    <string name="settingsSMS">Text Message Alerting</string>
     <string name="age">Age :</string>
     <string name="alcohol_chart">Blood Alcohol Chart</string>
     <string name="alcohollevel">Drink\'s Alcohol Level :</string>
@@ -360,6 +361,8 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="action_user">User Information</string>
+    <string name="mms">Text Message Alerting</string>
+    <string name="phone">Enter a phone number</string>
 
 
 </resources>

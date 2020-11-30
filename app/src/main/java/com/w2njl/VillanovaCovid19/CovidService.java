@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
+import android.telephony.SmsManager;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -48,9 +49,15 @@ public class CovidService extends Service {
     public static boolean running;
     public static long serviceTime;
     public static long serviceInterval;
+    public static final String SHARED_PREFS_SMS = "sharedPrefSMS";
+    public static final String SHARED_TEXT_SMS = "SMS";
+    public static final String SHARED_PREFS_PHONE = "sharedPrefSMSPHONE";
+    public static final String SHARED_TEXT_PHONE = "PHONE";
     String ACTION_STOP_SERVICE= "STOP";
     Bitmap artwork;
-    SharedPreferences sharedPreferences;
+    SharedPreferences sharedPreferences, sharedSMS, sharedPhone;
+    boolean alertingSMS;
+    String tel = null;
 
     private Thread thread;
     DatabaseReference reff = FirebaseDatabase.getInstance().getReference().child("Patient");
@@ -156,6 +163,12 @@ public class CovidService extends Service {
         sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         serviceInterval = sharedPreferences.getLong(SHARED_TEXT, 60000);
 
+        sharedSMS = getSharedPreferences(SHARED_PREFS_SMS, MODE_PRIVATE);
+        alertingSMS = sharedSMS.getBoolean(SHARED_TEXT_SMS, false);
+
+        sharedPhone = getSharedPreferences(SHARED_PREFS_PHONE, MODE_PRIVATE);
+        tel = sharedPhone.getString(SHARED_TEXT_PHONE, null);
+
 
     }
 
@@ -191,6 +204,12 @@ public class CovidService extends Service {
                     .build();
 
             startForeground(2, notificationAlert);
+
+
+            if(alertingSMS == true && tel != null) {
+                SmsManager smsManager = SmsManager.getDefault();
+                smsManager.sendTextMessage(tel, null, "My Covid risk is\n"+patient1.getDanger() ,  null, null);
+            }
         }
 
         Date date = new Date();
@@ -218,8 +237,6 @@ public class CovidService extends Service {
 
 
         artwork = findMax(getO2risk(spO2), getHRrisk(HR), getTempRisk(temp), getMVrisk(RR, TV));
-
-
 
 
 

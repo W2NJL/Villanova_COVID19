@@ -986,6 +986,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
 
 
             if(txtRR.getText().toString() == ""){
+                init(); 
                 initDB();
                 initViews();
                 Log.d(TAG, "onResume: HOLLA");}

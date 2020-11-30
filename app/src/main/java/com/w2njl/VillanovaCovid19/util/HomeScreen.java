@@ -3,11 +3,15 @@ package com.w2njl.VillanovaCovid19.util;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -78,6 +82,7 @@ public class HomeScreen extends AppCompatActivity implements LazyAdapter.clickIn
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_home_screen);
         MobileAds.initialize(this);
+
         initDB();
         init();
                 ratePrefs = getSharedPreferences(ratings_fileName, 0);
@@ -125,6 +130,7 @@ public class HomeScreen extends AppCompatActivity implements LazyAdapter.clickIn
         greeting = findViewById(R.id.greeting);
         setSupportActionBar(toolbar);
         setTitle(getResources().getString(R.string.app_name));
+
     }
 
 

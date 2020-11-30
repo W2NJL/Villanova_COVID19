@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.transition.Slide;
@@ -48,7 +51,12 @@ public class LaunchScreen extends AppCompatActivity {
 
         if (UserEmailKey != "" && UserPasswordKey != ""){
             if (!TextUtils.isEmpty(UserEmailKey) && !TextUtils.isEmpty(UserPasswordKey)){
-                allowAccess(UserEmailKey, UserPasswordKey);
+                if(isNetworkAvailable()) {
+                    allowAccess(UserEmailKey, UserPasswordKey);
+                }
+                else{
+                    startActivity(new Intent(LaunchScreen.this, HomeScreen.class));
+                }
             }
             else{
                 startActivity(new Intent(LaunchScreen.this, LoginActivity.class));
@@ -89,5 +97,12 @@ public class LaunchScreen extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
