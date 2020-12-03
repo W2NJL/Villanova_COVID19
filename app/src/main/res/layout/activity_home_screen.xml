@@ -91,13 +91,17 @@
                 android:paddingBottom="5dp"
                 android:textStyle="bold" />
 
-            <com.google.android.gms.ads.AdView
-                android:id="@+id/adView"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/adview_height"
-                android:layout_alignParentBottom="true"
-                app:adSize="SMART_BANNER"
-                app:adUnitId="@string/banner_ad_id" />
+            <TextView
+                android:id="@+id/risInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_below="@id/greeting"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                 />
+
+
 
 
         </RelativeLayout>

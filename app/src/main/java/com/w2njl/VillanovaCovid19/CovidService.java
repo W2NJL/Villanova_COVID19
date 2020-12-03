@@ -213,7 +213,7 @@ public class CovidService extends Service {
 
             if(alertingSMS == true && tel != null && isNetworkAvailable()) {
                 SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage(tel, null, "My Covid risk is\n"+patient1.getDanger()+", with an RIS score of " + patient1.getRIS() + "\nHR of " + patient1.getHR() + " bpm" + "\nO2 level of  " + patient1.getSpO2() +"%" + "\nTemperature of " + patient1.getTemp() +  "\u00B0F",  null, null);
+                smsManager.sendTextMessage(tel, null, "My Covid risk is\n"+patient1.getDanger()+", with an RIS score of " + patient1.getRIS() + "\nHR of " + patient1.getHR() + " bpm" + "\nO2 level of  " + patient1.getSpO2() +"%" + "\nTemperature of " + patient1.getTemp() + "F",  null, null);
             }
         }
 

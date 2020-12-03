@@ -1,6 +1,7 @@
 package com.w2njl.VillanovaCovid19.util;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -15,6 +16,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +36,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.w2njl.VillanovaCovid19.ConnectionDetector;
 import com.w2njl.VillanovaCovid19.MainActivity;
@@ -41,9 +44,14 @@ import com.w2njl.VillanovaCovid19.R;
 import com.w2njl.VillanovaCovid19.adapters.LazyAdapter;
 import com.w2njl.VillanovaCovid19.models.RowItem;
 
+import org.apache.commons.math3.util.Precision;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.w2njl.VillanovaCovid19.CovidService.finished;
+import static com.w2njl.VillanovaCovid19.CovidService.running;
 import static com.w2njl.VillanovaCovid19.util.RISActivity.reff;
 
 public class HomeScreen extends AppCompatActivity implements LazyAdapter.clickInterface {
@@ -65,11 +73,14 @@ public class HomeScreen extends AppCompatActivity implements LazyAdapter.clickIn
     LazyAdapter lazyAdapter;
     RecyclerView listView;
     Toolbar toolbar;
-    TextView greeting;
+    TextView greeting, RISinfo;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private DatabaseReference reference;
     private String userId;
+    private int RIS;
+    Query lastQuery;
+    private static CovidFeatures patient1 = new CovidFeatures();
 
     ConnectionDetector cd;
     boolean interstitialCanceled;
@@ -81,10 +92,11 @@ public class HomeScreen extends AppCompatActivity implements LazyAdapter.clickIn
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_home_screen);
-        MobileAds.initialize(this);
+
 
         initDB();
         init();
+        initCovid();
                 ratePrefs = getSharedPreferences(ratings_fileName, 0);
 //        ((AdView) findViewById(R.id.adView)).loadAd(new AdRequest.Builder().build());
         listView = findViewById(R.id.myList);
@@ -101,6 +113,7 @@ public class HomeScreen extends AppCompatActivity implements LazyAdapter.clickIn
         lazyAdapter.setListeners(this);
 
         reference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User userProfile = snapshot.getValue(User.class);
@@ -109,8 +122,21 @@ public class HomeScreen extends AppCompatActivity implements LazyAdapter.clickIn
                     String fullName = userProfile.fullName;
                     String email = userProfile.email;
                     String age = userProfile.age;
+                    LocalDateTime now = LocalDateTime.now();
+                    int timeOfDay = now.getHour();
 
-                   greeting.setText("Welcome, " + fullName + "!");
+                    if(timeOfDay >= 5 && timeOfDay < 12){
+                        greeting.setText("Good Morning, " + fullName + "!");
+                    }else if(timeOfDay >= 12 && timeOfDay < 16){
+                        greeting.setText("Good Afternoon, " + fullName + "!");
+                    }else if(timeOfDay >= 16 && timeOfDay < 24){
+                        greeting.setText("Good Evening, " + fullName + "!");
+                    }else if(timeOfDay >= 0 && timeOfDay < 5){
+                        greeting.setText("Good Evening, " + fullName + "!");
+                    }
+
+                    RISinfo.setText("Your last RIS score was " + patient1.getDanger());
+
                 }
             }
 
@@ -128,6 +154,7 @@ public class HomeScreen extends AppCompatActivity implements LazyAdapter.clickIn
         reference = FirebaseDatabase.getInstance().getReference("Users");
         userId = user.getUid();
         greeting = findViewById(R.id.greeting);
+        RISinfo = findViewById(R.id.risInfo);
         setSupportActionBar(toolbar);
         setTitle(getResources().getString(R.string.app_name));
 
@@ -261,10 +288,49 @@ public class HomeScreen extends AppCompatActivity implements LazyAdapter.clickIn
         super.onResume();
     }
 
+    private void initCovid(){
+        lastQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot child: snapshot.getChildren()) {
+                    int HR = child.child("hr").getValue(Integer.class);
+                    double temp = child.child("temp").getValue(Double.class);
+                    int spO2 = child.child("spO2").getValue(Integer.class);
+                    int TV = child.child("tv").getValue(Integer.class);
+                    int RR = child.child("rr").getValue(Integer.class);
+
+
+
+                    temp = Precision.round(temp, 1);
+                    RIS = child.child("ris").getValue(Integer.class);
+
+
+                    String date = child.child("currentTime").getValue().toString();
+
+
+                    patient1 = new CovidFeatures(getDanger(RIS), 1, RIS, HR, spO2, temp,
+                            TV, RR, date);
+
+
+                    lastQuery.removeEventListener(this);
+                }
+
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                lastQuery.removeEventListener(this);
+            }
+        });
+    }
+
     private void initDB(){
         if(reff == null){
            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+           reff = FirebaseDatabase.getInstance().getReference().child("Patient");
         }
+        lastQuery = reff.orderByKey().limitToLast(1);
 
     }
 
@@ -287,5 +353,20 @@ public class HomeScreen extends AppCompatActivity implements LazyAdapter.clickIn
 //            });
 
         }
+    }
+
+    private String getDanger(int RIS) {
+
+
+        if (RIS > 0 && RIS < 50)
+            return "ELEVATED";
+
+        if (RIS >= 50 && RIS < 100)
+            return "MODERATE";
+
+        if (RIS >= 100)
+            return "HIGH";
+
+        return "LOW";
     }
 }
