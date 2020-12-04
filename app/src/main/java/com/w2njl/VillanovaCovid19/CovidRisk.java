@@ -69,5 +69,5 @@ public class CovidRisk extends AppCompatActivity {
 
     }
 
-    public static native double addArray(double []arr, double []arr2);
+    public static native double addArray(double []arr, double []arr2, double []arr3, double []arr4);
 }

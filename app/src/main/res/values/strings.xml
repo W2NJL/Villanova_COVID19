@@ -258,7 +258,7 @@
     <string name="sixteen2eight">16 – 18.5</string>
     <string name="sixteenmin">16-</string>
     <string name="sharedata">Share Data</string>
-    <string name="viewgraph">View Audio Graph</string>
+    <string name="viewgraph">Breathing Data</string>
     <string name="viewarchives">View Archives</string>
     <string name="startmonitoring">Start Monitoring</string>
     <string name="stopmonitoring">Stop Monitoring</string>
@@ -363,6 +363,8 @@
     <string name="action_user">User Information</string>
     <string name="mms">Text Message Alerting</string>
     <string name="phone">Enter a phone number</string>
+    <string name="filterView">View filtered audio</string>
+    <string name="phases">View breathing phases</string>
 
 
 </resources>

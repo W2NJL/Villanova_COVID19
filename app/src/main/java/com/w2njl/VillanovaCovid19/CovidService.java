@@ -61,12 +61,19 @@ public class CovidService extends Service {
     Bitmap artwork;
     SharedPreferences sharedPreferences, sharedSMS, sharedPhone;
     boolean alertingSMS;
+    public static boolean firstRun = false;
     String tel = null;
 
     private Thread thread;
     DatabaseReference reff = FirebaseDatabase.getInstance().getReference().child("Patient");
     private double[] unboxed;
     private double[] unboxed2;
+    private double[] unboxed3;
+    private double[] unboxed4;
+    public static double[] unfiltered;
+    public static double[] filtered;
+    public static double[] inhale;
+    public static double[] exhale;
     //    boolean thread1Start;
 //    boolean thread2Start;
 //    private Thread thread1;
@@ -180,6 +187,7 @@ public class CovidService extends Service {
     private void generateCovid() {
 
         loadfromC();
+        firstRun = true;
         CovidFeatures patient1 = initCovidData();
         reff.push().setValue(patient1);
         finished = true;
@@ -365,6 +373,8 @@ public class CovidService extends Service {
 
         //Store some features
         zz = new double[2];
+        unboxed3 = new double[100000];
+        unboxed4 = new double[100000];
 
         //Subtract the mean from the unfiltered data
         double mean = 0;
@@ -379,7 +389,12 @@ public class CovidService extends Service {
 
 
         //Call C function
-        addArray(unboxed, zz);
+        addArray(unboxed, unboxed3, unboxed4, zz);
+
+        filtered = unboxed;
+        unfiltered = unboxed2;
+        inhale = unboxed3;
+        exhale = unboxed4;
 
         Log.d(TAG, "loadfromC:  In elements: " + zz[0]);
         Log.d(TAG, "loadfromC:  Out elements: " + zz[1]);

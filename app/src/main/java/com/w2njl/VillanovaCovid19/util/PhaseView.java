@@ -32,11 +32,13 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import static com.w2njl.VillanovaCovid19.CovidRisk.addArray;
+import static com.w2njl.VillanovaCovid19.CovidService.exhale;
 import static com.w2njl.VillanovaCovid19.CovidService.filtered;
+import static com.w2njl.VillanovaCovid19.CovidService.inhale;
 import static com.w2njl.VillanovaCovid19.CovidService.unfiltered;
 
 
-public class TestActivity extends AppCompatActivity {
+public class PhaseView extends AppCompatActivity {
 
     private static final String TAG = "TestActivity";
     //    private Handler mainHandler = new Handler();
@@ -197,27 +199,31 @@ public class TestActivity extends AppCompatActivity {
 
 
         GraphView graph = (GraphView) findViewById(R.id.graph);
+        graph.getViewport().setXAxisBoundsManual(true);
+        graph.getViewport().setMinX(0);
+        graph.getViewport().setMaxX(105000);
 
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
         series.setTitle("Filtered data");
         series.setColor(Color.GREEN);
         LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>();
         int z = 0;
-        for(int x=540296; x<578270; x++) {
-            DataPoint point = new DataPoint(z, filtered[x]);
-            series.appendData(point, true, 37973);
+        for(int x=0; x<61389; x++) {
+            DataPoint point = new DataPoint(z, inhale[x]);
+            series.appendData(point, true, 61389);
             z++;
         }
         graph.addSeries(series);
 
-        for(int w=540296; w<578270; w++) {
-            DataPoint point2 = new DataPoint(z, unfiltered[w]);
-            series2.appendData(point2, true, 37973);
+
+        for(int w=0; w<43363; w++) {
+            DataPoint point2 = new DataPoint(z, exhale[w]);
+            series2.appendData(point2, true, 43363);
             z++;
         }
         graph.addSeries(series2);
-        series.setTitle("Filtered");
-        series2.setTitle("Unfiltered");
+        series.setTitle("Inhale");
+        series2.setTitle("Exhale");
         graph.getLegendRenderer().setVisible(true);
         graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
         graph.getGridLabelRenderer().setVerticalLabelsVisible(false);

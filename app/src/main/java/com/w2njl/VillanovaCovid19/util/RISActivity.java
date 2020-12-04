@@ -12,6 +12,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -77,6 +79,7 @@ import java.util.concurrent.TimeUnit;
 import io.paperdb.Paper;
 
 import static com.w2njl.VillanovaCovid19.CovidService.finished;
+import static com.w2njl.VillanovaCovid19.CovidService.firstRun;
 import static com.w2njl.VillanovaCovid19.CovidService.running;
 import static com.w2njl.VillanovaCovid19.CovidService.serviceTime;
 
@@ -138,6 +141,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
 
         btnArchive = findViewById(R.id.btnViewArchives);
         btnGraph = findViewById(R.id.btnViewSound);
+        btnGraph.getBackground().setColorFilter(new PorterDuffColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY));
         btnShare = findViewById(R.id.btnShare);
         btnMonitoring = findViewById(R.id.btnMonitoring);
 
@@ -242,13 +246,21 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
         });
 
 
-        btnGraph.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(RISActivity.this, TestActivity.class);
-                startActivity(intent);
+    btnGraph.setOnClickListener((new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if(!firstRun)
+            Toast.makeText(RISActivity.this, "Breathing data not available until sample is finished processing", Toast.LENGTH_LONG).show();
+            else{
+                PopupMenu popup = new PopupMenu(RISActivity.this, view);
+                popup.setOnMenuItemClickListener(RISActivity.this);
+                popup.inflate(R.menu.menu_breathing);
+                popup.show();
             }
-        });
+
+        }
+    }));
+
 
         btnArchive.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -356,6 +368,8 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
                                           graph.getViewport().setXAxisBoundsManual(true);
                                           graph.getViewport().setMinX(0);
                                           graph.getViewport().setMaxX(3);
+
+
 
                                           Log.d(TAG, "onDataChange: sum " + sum);
                                           Log.d(TAG, "onDataChange: childs " + snapshot.getChildrenCount());
@@ -650,7 +664,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
         img_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                startActivity(new Intent(RISActivity.this, HomeScreen.class));
             }
         });
     }
@@ -1092,6 +1106,15 @@ exec.shutdown();
                 intent = new Intent(RISActivity.this, RISWeekArchiveActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.filterView:
+                intent = new Intent(RISActivity.this, TestActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.phaseView:
+                intent = new Intent(RISActivity.this, PhaseView.class);
+                startActivity(intent);
+                return true;
+
             default:
                 intent = new Intent(RISActivity.this, RISMonthArchiveActivity.class);
                 startActivity(intent);

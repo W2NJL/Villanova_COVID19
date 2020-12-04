@@ -5,8 +5,10 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.SEND_SMS"/>
-    <uses-permission-sdk-23 android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
+    <uses-permission-sdk-23 android:name="android.permission.READ_PHONE_STATE" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
@@ -17,7 +19,10 @@
         android:roundIcon="@mipmap/villanovanew2_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".util.LaunchScreen"
+        <activity android:name=".util.PhaseView"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".util.LaunchScreen"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,10 +33,9 @@
         <activity android:name=".util.ForgotPassword" />
         <activity android:name=".util.UserProfile" />
         <activity android:name=".RegisterUser" />
-        <activity android:name=".LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".util.RISMonthArchiveActivity" />
         <activity android:name=".util.RISWeekArchiveActivity" />
         <activity
@@ -44,7 +48,8 @@
         <activity
             android:name=".util.RISActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".util.TestActivity" />
+        <activity android:name=".util.TestActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".CovidRisk" />
 
         <meta-data

@@ -166,7 +166,7 @@
 //}
 JNIEXPORT jdouble JNICALL
 Java_com_w2njl_VillanovaCovid19_CovidRisk_addArray(JNIEnv *env, jclass clazz,
-                                                           jdoubleArray jarr, jdoubleArray jarr2) {
+                                                           jdoubleArray jarr, jdoubleArray jarr2, jdoubleArray jarr3, jdoubleArray jarr4) {
 
    //Construct double and EMX arrays for filtered and unfiltered data
 
@@ -188,6 +188,8 @@ Java_com_w2njl_VillanovaCovid19_CovidRisk_addArray(JNIEnv *env, jclass clazz,
     //Store the Java arrays as JNI data types
     jdouble *arr = (*env)->GetDoubleArrayElements(env, jarr, NULL);
     jdouble *arr2 = (*env)->GetDoubleArrayElements(env, jarr2, NULL);
+    jdouble *arr3 = (*env)->GetDoubleArrayElements(env, jarr3, NULL);
+    jdouble *arr4 = (*env)->GetDoubleArrayElements(env, jarr4, NULL);
     double res=0;
 
     //Get elements of WAV file array
@@ -207,8 +209,8 @@ Java_com_w2njl_VillanovaCovid19_CovidRisk_addArray(JNIEnv *env, jclass clazz,
     //Call the filtering function
     filtering(rawInputs, 16000, filteredOutputs);
 
-//    for(int i=0;i<size;i++)
-//        arr[i] = y_fil[i];
+    for(int i=0;i<size;i++)
+        arr[i] = y_fil[i];
 
     /*Initialize the cell_wrap arrays */
     cell_wrap_0 y_ph_in[100];
@@ -222,6 +224,25 @@ Java_com_w2njl_VillanovaCovid19_CovidRisk_addArray(JNIEnv *env, jclass clazz,
 
     /*Run the phase sep function */
     phase_sep(rawInputs, filteredOutputs, y_ph_in, y_ph_fil_in, y_ph_ex, y_ph_fil_ex, siz_in_data, siz_in_size, siz_ex_data, siz_ex_size);
+
+    insize = siz_in_data[0];
+    exsize = siz_ex_data[0];
+
+    double inPhase[insize];
+    double exPhase[exsize];
+
+    for(int i=0; i<insize; i++)
+        inPhase[i] = y_ph_in[0].f1->data[i];
+
+    for(int i=0; i<exsize; i++)
+        exPhase[i] = y_ph_ex[0].f1->data[i];
+
+    for(int i=0;i<insize;i++)
+        arr2[i] = inPhase[i];
+
+    for(int i=0;i<exsize;i++)
+        arr3[i] = exPhase[i];
+
 
     /*Destroy the EMX arrays */
     emxDestroyArray_real_T(filteredOutputs);
@@ -285,12 +306,14 @@ Java_com_w2njl_VillanovaCovid19_CovidRisk_addArray(JNIEnv *env, jclass clazz,
 //        }
 //
     for(int i=0;i<2;i++)
-        arr2[i] = datax[i];
+        arr4[i] = datax[i];
 
     /*Return the arrays back to Java */
 
     (*env)->ReleaseDoubleArrayElements(env, jarr, arr, 0);
     (*env)->ReleaseDoubleArrayElements(env, jarr2, arr2, 0);
+    (*env)->ReleaseDoubleArrayElements(env, jarr3, arr3, 0);
+    (*env)->ReleaseDoubleArrayElements(env, jarr4, arr4, 0);
 
     return res;
 }

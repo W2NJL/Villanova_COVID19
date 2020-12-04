@@ -124,13 +124,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(false);
         TextView text_title = findViewById(R.id.text_title);
         text_title.setText(getResources().getString(R.string.covid_assessment));
-        ImageView img_back = findViewById(R.id.img_back);
-        img_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+
 
     }
 

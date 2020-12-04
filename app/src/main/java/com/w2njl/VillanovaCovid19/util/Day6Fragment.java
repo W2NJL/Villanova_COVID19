@@ -193,6 +193,7 @@ public class Day6Fragment extends Fragment {
 //                    graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
                     LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
+                    series.setThickness(8);
                     series.setTitle("Filtered data");
                     series.setColor(Color.GREEN);
                     DataPoint point;
