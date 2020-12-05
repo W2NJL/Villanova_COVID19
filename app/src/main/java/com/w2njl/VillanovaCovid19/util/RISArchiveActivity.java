@@ -10,10 +10,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -37,6 +40,8 @@ import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.w2njl.VillanovaCovid19.CovidService;
+import com.w2njl.VillanovaCovid19.LoginActivity;
 import com.w2njl.VillanovaCovid19.R;
 
 import org.apache.commons.math3.util.Precision;
@@ -49,6 +54,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import io.paperdb.Paper;
+
+import static com.w2njl.VillanovaCovid19.CovidService.running;
+
 public class RISArchiveActivity extends AppCompatActivity {
     private static final String TAG = null;
     Toolbar toolbar;
@@ -59,6 +68,7 @@ public class RISArchiveActivity extends AppCompatActivity {
     LocalDate currentDate;
     TabLayout tabLayout;
     TabItem dayTab, monthTab, yearTab;
+    private Intent mIntent;
     DayFragment dayFragment;
     Day2Fragment day2Fragment;
     Day3Fragment day3Fragment;
@@ -580,6 +590,60 @@ graph.setTitle("RIS values by hour");
             }
         });
 
+
+
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.actionRate:
+                Intent intent = new Intent(RISArchiveActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.actionFeedback:
+                sendFeedBack();
+                break;
+            case R.id.actionLogout:
+                mIntent = new Intent(this, CovidService.class);
+                if(running){
+                   stopService(mIntent);
+                }
+                Paper.init(this);
+                Paper.book().destroy();
+                startActivity(new Intent(RISArchiveActivity.this, LoginActivity.class));
+                break;
+            case R.id.actionUser:
+                startActivity(new Intent(RISArchiveActivity.this, UserProfile.class));
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    private void sendFeedBack() {
+        Intent localIntent = new Intent(Intent.ACTION_SEND);
+        localIntent.putExtra(Intent.EXTRA_EMAIL, R.string.mail_feedback_email);
+        localIntent.putExtra(Intent.EXTRA_CC, "");
+        String str;
+        try {
+            str = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            localIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.feedback_msg));
+            localIntent.putExtra(Intent.EXTRA_TEXT, "\n\n----------------------------------\n" + getResources().getString(R.string.device_os) +
+                    Build.VERSION.RELEASE + "\n" + getResources().getString(R.string.app_version) + str + "\n Device Brand: " + Build.BRAND +
+                    "\n" + getResources().getString(R.string.device_model) + Build.MODEL + "\n" + getResources().getString(R.string.manufacturer) + Build.MANUFACTURER);
+            localIntent.setType("message/rfc822");
+            startActivity(Intent.createChooser(localIntent, getResources().getString(R.string.email_client)));
+        } catch (Exception ignored) {
+        }
     }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -613,4 +677,6 @@ graph.setTitle("RIS values by hour");
             return fragmentTitle.get(position);
         }
     }
+
+
 }

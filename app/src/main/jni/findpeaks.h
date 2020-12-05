@@ -5,7 +5,7 @@
  * File: findpeaks.h
  *
  * MATLAB Coder version            : 5.0
- * C/C++ source code generated on  : 16-Nov-2020 11:39:11
+ * C/C++ source code generated on  : 04-Dec-2020 03:11:40
  */
 
 #ifndef FINDPEAKS_H
@@ -18,8 +18,8 @@
 #include "phase_sep_types.h"
 
 /* Function Declarations */
-extern void findpeaks(const emxArray_real_T *Yin, emxArray_real_T *Ypk,
-                      emxArray_real_T *Xpk);
+extern void findpeaks(const emxArray_real_T *Yin, double varargin_2,
+                      emxArray_real_T *Ypk, emxArray_real_T *Xpk);
 
 #endif
 

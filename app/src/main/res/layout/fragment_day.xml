@@ -46,7 +46,7 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#939FDA"
+            android:background="#5090cd"
             >
             <TableRow>
 

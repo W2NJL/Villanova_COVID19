@@ -5,7 +5,7 @@
  * File: phase_sep.h
  *
  * MATLAB Coder version            : 5.0
- * C/C++ source code generated on  : 16-Nov-2020 11:39:11
+ * C/C++ source code generated on  : 04-Dec-2020 03:11:40
  */
 
 #ifndef PHASE_SEP_H
@@ -19,9 +19,9 @@
 
 /* Function Declarations */
 extern void phase_sep(const emxArray_real_T *y_raw, const emxArray_real_T
-                      *y_fil_hb, cell_wrap_0 y_ph_in[100], cell_wrap_0
-                      y_ph_fil_in[100], cell_wrap_0 y_ph_ex[100], cell_wrap_0
-                      y_ph_fil_ex[100], double siz_in_data[], int siz_in_size[2],
+                      *y_fil_hb, double Fs, cell_wrap_0 y_ph_in[30], cell_wrap_0
+                      y_ph_fil_in[30], cell_wrap_0 y_ph_ex[30], cell_wrap_0
+                      y_ph_fil_ex[30], double siz_in_data[], int siz_in_size[2],
                       double siz_ex_data[], int siz_ex_size[2]);
 
 #endif

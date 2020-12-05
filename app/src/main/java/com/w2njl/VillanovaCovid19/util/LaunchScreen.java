@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.w2njl.VillanovaCovid19.ConnectionDetector;
 import com.w2njl.VillanovaCovid19.LoginActivity;
 import com.w2njl.VillanovaCovid19.R;
 
@@ -29,6 +30,7 @@ import io.paperdb.Paper;
 public class LaunchScreen extends AppCompatActivity {
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
+    ConnectionDetector cd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +50,11 @@ public class LaunchScreen extends AppCompatActivity {
 
         String UserEmailKey = Paper.book().read(Prevalent.userEmail);
         String UserPasswordKey = Paper.book().read(Prevalent.userPasswordKey);
+        cd = new ConnectionDetector(this);
 
         if (UserEmailKey != "" && UserPasswordKey != ""){
             if (!TextUtils.isEmpty(UserEmailKey) && !TextUtils.isEmpty(UserPasswordKey)){
-                if(isNetworkAvailable()) {
+                if(cd.isConnectingToInternet()) {
                     allowAccess(UserEmailKey, UserPasswordKey);
                 }
                 else{
@@ -99,10 +102,5 @@ public class LaunchScreen extends AppCompatActivity {
         });
     }
 
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
+
 }

@@ -24,6 +24,7 @@ import androidx.core.app.NotificationManagerCompat;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.w2njl.VillanovaCovid19.util.CovidFeatures;
+import com.w2njl.VillanovaCovid19.util.HomeScreen;
 import com.w2njl.VillanovaCovid19.util.RISActivity;
 import com.w2njl.VillanovaCovid19.util.RISArchiveActivity;
 import com.w2njl.VillanovaCovid19.util.TestActivity;
@@ -44,6 +45,7 @@ import static com.w2njl.VillanovaCovid19.App.CHANNEL_ID;
 import static com.w2njl.VillanovaCovid19.CovidRisk.addArray;
 import static com.w2njl.VillanovaCovid19.util.SettingsActivity.SHARED_PREFS;
 import static com.w2njl.VillanovaCovid19.util.SettingsActivity.SHARED_TEXT;
+import static java.lang.StrictMath.floor;
 
 
 public class CovidService extends Service {
@@ -79,6 +81,7 @@ public class CovidService extends Service {
 //    private Thread thread1;
 //    private Thread thread2;
     private double[] zz;
+    ConnectionDetector cd;
 
     public void onCreate() {
         super.onCreate();
@@ -217,9 +220,9 @@ public class CovidService extends Service {
                     .build();
 
             startForeground(2, notificationAlert);
+            cd = new ConnectionDetector(this);
 
-
-            if(alertingSMS == true && tel != null && isNetworkAvailable()) {
+            if(alertingSMS == true && tel != null && cd.isConnectingToInternet()) {
                 SmsManager smsManager = SmsManager.getDefault();
                 smsManager.sendTextMessage(tel, null, "My Covid risk is\n"+patient1.getDanger()+", with an RIS score of " + patient1.getRIS() + "\nHR of " + patient1.getHR() + " bpm" + "\nO2 level of  " + patient1.getSpO2() +"%" + "\nTemperature of " + patient1.getTemp() + "F",  null, null);
             }
@@ -240,7 +243,7 @@ public class CovidService extends Service {
         double temp = 96.4 + (102.5 - 96.4) * random.nextDouble();
         int spO2 = random.nextInt(99 - 87) + 87;
         int TV = random.nextInt(10000 - 5000) + 5000;
-        int RR = (int) ((int) zz[0] + zz[1]);
+        int RR = (int) floor(((int) zz[0] + zz[1])/2);
 
 
         temp = Precision.round(temp, 1);
@@ -357,10 +360,12 @@ public class CovidService extends Service {
 
         //Load in WAV file
         Log.d(TAG, "loadfromC:  Start");
-        WavFile j = new WavFile("32mm.wav", this);
+        WavFile j = new WavFile("Trial09.wav", this);
 
         //Convert to ArrayList
         ArrayList<Double> jz = j.getSamples();
+
+        int wavSize = jz.size();
 
 
         Double[] dblArray = new Double[jz.size()];
@@ -372,19 +377,19 @@ public class CovidService extends Service {
         unboxed2 = Stream.of(dblArray).mapToDouble(Double::doubleValue).toArray();
 
         //Store some features
-        zz = new double[2];
+        zz = new double[4];
         unboxed3 = new double[100000];
         unboxed4 = new double[100000];
 
         //Subtract the mean from the unfiltered data
         double mean = 0;
-        for (int i=0; i<2890080; i++) {
+        for (int i=0; i<wavSize; i++) {
             mean = mean + unboxed[i];
         }
 
-        mean = mean/2890080;
+        mean = mean/wavSize;
 
-        for(int z=0; z<2890080; z++){
+        for(int z=0; z<wavSize; z++){
             unboxed[z] = unboxed[z] - mean;}
 
 
@@ -398,6 +403,8 @@ public class CovidService extends Service {
 
         Log.d(TAG, "loadfromC:  In elements: " + zz[0]);
         Log.d(TAG, "loadfromC:  Out elements: " + zz[1]);
+        Log.d(TAG, "loadfromC:  Size of inhale phase: " + zz[2]);
+        Log.d(TAG, "loadfromC:  Size of exhale phase: " + zz[3]);
 
 
 //
@@ -406,10 +413,5 @@ public class CovidService extends Service {
     }
 
 
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
+
 }

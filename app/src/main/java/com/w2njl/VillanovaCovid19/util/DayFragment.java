@@ -1,5 +1,6 @@
 package com.w2njl.VillanovaCovid19.util;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +11,9 @@ import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -24,6 +28,7 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.w2njl.VillanovaCovid19.LoginActivity;
 import com.w2njl.VillanovaCovid19.R;
 
 import org.apache.commons.math3.util.Precision;
@@ -32,6 +37,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
+
+import io.paperdb.Paper;
+
+import static com.w2njl.VillanovaCovid19.CovidService.running;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -509,4 +518,6 @@ public class DayFragment extends Fragment {
 //        });
 
     }
+
+
 }

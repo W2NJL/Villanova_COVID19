@@ -10,8 +10,10 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Patterns;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -28,9 +30,12 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.w2njl.VillanovaCovid19.CovidService;
+import com.w2njl.VillanovaCovid19.LoginActivity;
 import com.w2njl.VillanovaCovid19.R;
 
 import java.util.Objects;
+
+import io.paperdb.Paper;
 
 import static com.w2njl.VillanovaCovid19.CovidService.SHARED_PREFS_PHONE;
 import static com.w2njl.VillanovaCovid19.CovidService.SHARED_PREFS_SMS;
@@ -57,6 +62,7 @@ public class SettingsActivity extends AppCompatActivity {
     TextInputEditText textInputEditText;
     Boolean alertingSMS = false;
     String tel;
+
 
 
 
@@ -187,11 +193,12 @@ else {
 
         switch ((int) temp ){
             case 0:
-                editor.putLong(SHARED_TEXT, 0);
+                temp = 45000;
+                editor.putLong(SHARED_TEXT, temp);
 
                 editor.apply();
 
-                Toast.makeText(SettingsActivity.this, "You have changed the RIS interval to 3 minutes", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SettingsActivity.this, "You have changed the RIS interval to 1 minute", Toast.LENGTH_SHORT).show();
                 break;
             case 30:
                 temp = 60 * 1000 * temp;
@@ -270,5 +277,50 @@ else {
                 onBackPressed();
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.actionRate:
+                Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.actionFeedback:
+                sendFeedBack();
+                break;
+            case R.id.actionLogout:
+                mIntent = new Intent(this, CovidService.class);
+                if(running){
+                    stopService(mIntent);
+                }
+                Paper.init(this);
+                Paper.book().destroy();
+                startActivity(new Intent(SettingsActivity.this, LoginActivity.class));
+                break;
+            case R.id.actionUser:
+                startActivity(new Intent(SettingsActivity.this, UserProfile.class));
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    private void sendFeedBack() {
+        Intent localIntent = new Intent(Intent.ACTION_SEND);
+        localIntent.putExtra(Intent.EXTRA_EMAIL, R.string.mail_feedback_email);
+        localIntent.putExtra(Intent.EXTRA_CC, "");
+        String str;
+        try {
+            str = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            localIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.feedback_msg));
+            localIntent.putExtra(Intent.EXTRA_TEXT, "\n\n----------------------------------\n" + getResources().getString(R.string.device_os) +
+                    Build.VERSION.RELEASE + "\n" + getResources().getString(R.string.app_version) + str + "\n Device Brand: " + Build.BRAND +
+                    "\n" + getResources().getString(R.string.device_model) + Build.MODEL + "\n" + getResources().getString(R.string.manufacturer) + Build.MANUFACTURER);
+            localIntent.setType("message/rfc822");
+            startActivity(Intent.createChooser(localIntent, getResources().getString(R.string.email_client)));
+        } catch (Exception ignored) {
+        }
     }
 }

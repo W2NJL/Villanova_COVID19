@@ -201,24 +201,24 @@ public class PhaseView extends AppCompatActivity {
         GraphView graph = (GraphView) findViewById(R.id.graph);
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(0);
-        graph.getViewport().setMaxX(105000);
+        graph.getViewport().setMaxX(70000);
 
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
         series.setTitle("Filtered data");
         series.setColor(Color.GREEN);
         LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>();
         int z = 0;
-        for(int x=0; x<61389; x++) {
+        for(int x=0; x<31020; x++) {
             DataPoint point = new DataPoint(z, inhale[x]);
-            series.appendData(point, true, 61389);
+            series.appendData(point, true, 31020);
             z++;
         }
         graph.addSeries(series);
 
 
-        for(int w=0; w<43363; w++) {
+        for(int w=0; w<38514; w++) {
             DataPoint point2 = new DataPoint(z, exhale[w]);
-            series2.appendData(point2, true, 43363);
+            series2.appendData(point2, true, 38514);
             z++;
         }
         graph.addSeries(series2);

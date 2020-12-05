@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,6 +73,7 @@ public class HomeScreen extends AppCompatActivity implements LazyAdapter.clickIn
     List<RowItem> rowItems;
     LazyAdapter lazyAdapter;
     RecyclerView listView;
+    ImageView timeOfDayImg;
     Toolbar toolbar;
     TextView greeting, RISinfo;
     private FirebaseAuth mAuth;
@@ -126,12 +128,16 @@ public class HomeScreen extends AppCompatActivity implements LazyAdapter.clickIn
                     int timeOfDay = now.getHour();
 
                     if(timeOfDay >= 5 && timeOfDay < 12){
+                        timeOfDayImg.setImageResource(R.drawable.sunshine);
                         greeting.setText("Good Morning, " + fullName + "!");
                     }else if(timeOfDay >= 12 && timeOfDay < 16){
+                        timeOfDayImg.setImageResource(R.drawable.sunshine);
                         greeting.setText("Good Afternoon, " + fullName + "!");
                     }else if(timeOfDay >= 16 && timeOfDay < 24){
+                        timeOfDayImg.setImageResource(R.drawable.night);
                         greeting.setText("Good Evening, " + fullName + "!");
                     }else if(timeOfDay >= 0 && timeOfDay < 5){
+                        timeOfDayImg.setImageResource(R.drawable.night);
                         greeting.setText("Good Evening, " + fullName + "!");
                     }
 
@@ -149,6 +155,7 @@ public class HomeScreen extends AppCompatActivity implements LazyAdapter.clickIn
 
     private void init() {
         mAuth = FirebaseAuth.getInstance();
+        timeOfDayImg = findViewById(R.id.timeOfDay);
         toolbar = findViewById(R.id.toolbar);
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users");

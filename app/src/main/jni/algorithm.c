@@ -182,6 +182,8 @@ Java_com_w2njl_VillanovaCovid19_CovidRisk_addArray(JNIEnv *env, jclass clazz,
     int siz_ex_size[2];
     int insize;
     int exsize;
+    int inhale;
+    int exhale;
     int inelements;
     int outelements;
 
@@ -223,10 +225,11 @@ Java_com_w2njl_VillanovaCovid19_CovidRisk_addArray(JNIEnv *env, jclass clazz,
     emxInitMatrix_cell_wrap_01(y_ph_fil_ex);
 
     /*Run the phase sep function */
-    phase_sep(rawInputs, filteredOutputs, y_ph_in, y_ph_fil_in, y_ph_ex, y_ph_fil_ex, siz_in_data, siz_in_size, siz_ex_data, siz_ex_size);
+    phase_sep(rawInputs, filteredOutputs, 16000, y_ph_in, y_ph_fil_in, y_ph_ex, y_ph_fil_ex, siz_in_data, siz_in_size, siz_ex_data, siz_ex_size);
 
     insize = siz_in_data[0];
     exsize = siz_ex_data[0];
+
 
     double inPhase[insize];
     double exPhase[exsize];
@@ -278,7 +281,7 @@ Java_com_w2njl_VillanovaCovid19_CovidRisk_addArray(JNIEnv *env, jclass clazz,
     emxDestroyMatrix_cell_wrap_0(y_ph_in);
 
 
-    double datax[2];
+    double datax[4];
 
 //    double entropy_dat1;
 //    double Sk;
@@ -298,6 +301,8 @@ Java_com_w2njl_VillanovaCovid19_CovidRisk_addArray(JNIEnv *env, jclass clazz,
 //
    datax[0] = inelements;
     datax[1] = outelements;
+    datax[2] = insize;
+    datax[3] = exsize;
 //    datax[2] = Ku;
 //
 //    for(int i=0;i<inelements+outelements;i++){
@@ -305,7 +310,7 @@ Java_com_w2njl_VillanovaCovid19_CovidRisk_addArray(JNIEnv *env, jclass clazz,
 //        datax[i] = featArr[i][0];
 //        }
 //
-    for(int i=0;i<2;i++)
+    for(int i=0;i<4;i++)
         arr4[i] = datax[i];
 
     /*Return the arrays back to Java */
