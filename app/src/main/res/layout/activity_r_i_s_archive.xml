@@ -47,8 +47,8 @@
 
             <ImageView
                 android:id="@+id/img_back"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
                 android:contentDescription="@string/todo"
                 android:scaleX="-1"
@@ -61,10 +61,9 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:fontFamily="@font/popind_regular"
+                android:paddingStart="5dp"
                 android:gravity="center_vertical"
                 android:includeFontPadding="false"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
                 android:text="@string/covid_assessment"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -73,8 +72,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
                 android:id="@+id/riskImage"
                 />
         </LinearLayout>
