@@ -181,14 +181,39 @@
                     <!--                app:layout_constraintTop_toTopOf="parent"-->
                     <!--                tools:srcCompat="@tools:sample/avatars" />-->
 
+                    <ProgressBar
+                        android:id="@+id/loading"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_gravity="center"
+                        android:indeterminateOnly="false"
+                        android:visibility="gone"
+                        android:progressDrawable="@drawable/circle"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/guideline2"
+                        tools:progress="0" />
+
+                    <TextView
+                        android:id="@+id/progressTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/loading"
+                        app:layout_constraintEnd_toEndOf="@+id/loading"
+                        app:layout_constraintStart_toStartOf="@+id/loading"
+                        app:layout_constraintTop_toTopOf="@+id/loading"
+                        tools:text="0%" />
+
                     <Button
                         android:id="@+id/btnMonitoring"
                         android:layout_width="170dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="72dp"
                         android:text="Start Monitoring"
-                        app:backgroundTint="@android:color/holo_red_dark"
                         android:textAllCaps="false"
+                        app:backgroundTint="@android:color/holo_red_dark"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/guideline"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -283,8 +308,8 @@
                         android:id="@+id/txtTVlabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/popind_regular"
                         android:layout_marginStart="108dp"
+                        android:fontFamily="@font/popind_regular"
                         android:text="TV:"
                         app:layout_constraintBottom_toBottomOf="@+id/txtTV"
                         app:layout_constraintStart_toStartOf="parent" />

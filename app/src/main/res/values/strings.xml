@@ -365,6 +365,7 @@
     <string name="phone">Enter a phone number</string>
     <string name="filterView">View filtered audio</string>
     <string name="phases">View breathing phases</string>
+    <string name="bluetooth">Downloading data from bluetooth sensor</string>
 
 
 </resources>

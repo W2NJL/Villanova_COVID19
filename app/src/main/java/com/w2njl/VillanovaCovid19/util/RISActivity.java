@@ -35,6 +35,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,11 +90,12 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
     public static final String RIS_ID_KEY = "risId";
     private static final String PATIENT_KEY = "patient1";
 
-    private TextView txtRIS, txtHR, txtSpO2, txtTemp, txtTV, txtRR, txtRisk, txtTimeStamp;
+    private TextView txtRIS, txtHR, txtSpO2, txtTemp, txtTV, txtRR, txtRisk, txtTimeStamp, txtProgress;
     private Button btnGraph, btnShare, btnArchive, btnMonitoring;
     boolean suppressed = false;
     int lastRIS;
     boolean hasShown = false;
+    String lastDate;
     
     Toolbar toolbar;
     public static DatabaseReference reff = null;
@@ -107,6 +109,9 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
     Query lastQuery;
     File imagePath;
     Boolean init = false;
+    public static ProgressBar progressBar;
+    private int progressStatus = 0;
+    private Handler handler = new Handler();
 
 
 
@@ -144,6 +149,9 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
         btnGraph.getBackground().setColorFilter(new PorterDuffColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY));
         btnShare = findViewById(R.id.btnShare);
         btnMonitoring = findViewById(R.id.btnMonitoring);
+        progressBar = findViewById(R.id.loading);
+        txtProgress = findViewById(R.id.progressTxt);
+
 
 //        if(!running) {
 //            btnMonitoring.setText(R.string.startmonitoring);
@@ -681,6 +689,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
 
         SharedPreferences sharedPreferences = null;
         ArrayList<CovidFeatures> covids = new ArrayList<>();
+        lastRIS = Integer.parseInt(txtRIS.getText().toString());
 
 //        Random random = new Random();
 //        int HR2;
@@ -728,10 +737,16 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
                     patient1 = new CovidFeatures(getDanger(RIS), 1, RIS, HR, spO2, temp,
                             TV, RR, date);
 
-                    setData(patient1);
+                    patient1.getCurrentTime();
+
+                    if(lastRIS != RIS){
+                    setData(patient1);}
 
 
                     if(running && finished && RIS != lastRIS){
+                        progressBar.setVisibility(View.GONE);
+                        txtProgress.setVisibility(View.GONE);
+                        txtRisk.setVisibility(View.VISIBLE);
                         myCustomSnackbar(patient1);
                     lastRIS = RIS; }
                     else
@@ -1009,6 +1024,68 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
         snackbar.show();
     }
 
+    public void myCustomSnackbar3() {
+
+        String message2 = "COVID-19 monitoring not active.";
+
+        // Create the Snackbar
+        LinearLayout.LayoutParams objLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        snackbar = Snackbar.make(this.findViewById(android.R.id.content), message2, Snackbar.LENGTH_INDEFINITE);
+
+        // Get the Snackbar layout view
+        Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) snackbar.getView();
+
+        // Set snackbar layout params
+        int navbarHeight = getNavBarHeight(this);
+        FrameLayout.LayoutParams parentParams = (FrameLayout.LayoutParams) layout.getLayoutParams();
+        parentParams.setMargins(0, 0, 0, 0 - navbarHeight );
+        layout.setLayoutParams(parentParams);
+        layout.setPadding(0, 0, 0, 0);
+        layout.setLayoutParams(parentParams);
+
+        // Inflate our custom view
+        View snackView = getLayoutInflater().inflate(R.layout.my_snackbar3, null);
+
+        // Configure our custom view
+        TextView messageTextView = (TextView) snackView.findViewById(R.id.message_text_view);
+        messageTextView.setText(message2);
+
+
+
+        TextView textViewOne = (TextView) snackView.findViewById(R.id.first_text_view);
+        textViewOne.setText("Start");
+        textViewOne.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+
+                try {
+                    startService(v);
+                    btnMonitoring.setText(R.string.stopmonitoring);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        TextView textViewTwo = (TextView) snackView.findViewById(R.id.second_text_view);
+        textViewTwo.setText("Dismiss");
+        textViewTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("Deny", "showTwoButtonSnackbar() : deny clicked");
+                snackbar.dismiss();
+            }
+        });
+
+        // Add our custom view to the Snackbar's layout
+        layout.addView(snackView, objLayoutParams);
+
+        // Show the Snackbar
+        snackbar.show();
+    }
+
     public static int getNavBarHeight(Context context) {
         int result = 0;
         int resourceId = context.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
@@ -1029,11 +1106,42 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
 
         exec = Executors.newSingleThreadScheduledExecutor();         exec.scheduleAtFixedRate(() -> {             initViews();      }, 1, 10, TimeUnit.SECONDS);
 
+        progressStatus = 0;
+        progressBar.setProgress(0);
+        txtTimeStamp.setText(R.string.bluetooth);
+        txtRisk.setVisibility(View.GONE);
+progressBar.setVisibility(View.VISIBLE);
+txtProgress.setVisibility(View.VISIBLE);
+        new Thread(new Runnable() {
+            public void run() {
+                while (progressStatus < 100) {
+                    progressStatus += 5;
+                    // Update the progress bar and display the
+                    //current value in the text view
+                    handler.post(new Runnable() {
+                        public void run() {
+                            progressBar.setProgress(progressStatus);
+                            txtProgress.setText(progressStatus+"%");
+                        }
+                    });
+                    try {
+                        // Sleep for 200 milliseconds.
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
+
+
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onResume() {
         if (!running) {
+            myCustomSnackbar3();
             btnMonitoring.setText(R.string.startmonitoring);
             btnMonitoring.setTag(1);
             init();
@@ -1083,9 +1191,14 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
 
     
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void stopService(View v) {
-
+        progressBar.setVisibility(View.GONE);
+        txtProgress.setVisibility(View.GONE);
 exec.shutdown();
+myCustomSnackbar3();
+setData(patient1);
+txtRisk.setVisibility(View.VISIBLE);
 
 
 
