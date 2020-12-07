@@ -188,6 +188,90 @@ public class Day6Fragment extends Fragment {
                     graph.getViewport().setMinX(0);
                     graph.getViewport().setMaxX(24);
 
+                    //Get RR graph data
+                    GraphView graphRR = (GraphView) getView().findViewById(R.id.graphRR);
+
+                    graphRR.setTitle("RR values by hour");
+
+                    graphRR.getViewport().setYAxisBoundsManual(true);
+                    graphRR.getViewport().setMinY(5);
+                    graphRR.getViewport().setMaxY(20);
+
+
+                    graphRR.getViewport().setXAxisBoundsManual(true);
+                    graphRR.getViewport().setMinX(0);
+                    graphRR.getViewport().setMaxX(24);
+
+                    LineGraphSeries<DataPoint> seriesRR = new LineGraphSeries<>();
+                    seriesRR.setThickness(7);
+                    seriesRR.setTitle("Filtered data");
+
+                    seriesRR.setColor(Color.BLUE);
+                    DataPoint pointRR;
+
+                    //Get spO2 graph data
+                    GraphView graphspO2 = (GraphView) getView().findViewById(R.id.graphspO2);
+
+                    graphspO2.setTitle("Oxygen percentage by hour");
+
+                    graphspO2.getViewport().setYAxisBoundsManual(true);
+                    graphspO2.getViewport().setMinY(85);
+                    graphspO2.getViewport().setMaxY(100);
+
+
+                    graphspO2.getViewport().setXAxisBoundsManual(true);
+                    graphspO2.getViewport().setMinX(0);
+                    graphspO2.getViewport().setMaxX(24);
+
+                    LineGraphSeries<DataPoint> seriesspO2 = new LineGraphSeries<>();
+                    seriesspO2.setThickness(7);
+                    seriesspO2.setTitle("Filtered data");
+
+                    seriesRR.setColor(Color.MAGENTA);
+                    DataPoint pointspO2;
+
+                    //Get HR graph data
+                    GraphView graphHR = (GraphView) getView().findViewById(R.id.graphHR);
+
+                    graphHR.setTitle("Heart rate by hour");
+
+                    graphHR.getViewport().setYAxisBoundsManual(true);
+                    graphHR.getViewport().setMinY(50);
+                    graphHR.getViewport().setMaxY(180);
+
+
+                    graphHR.getViewport().setXAxisBoundsManual(true);
+                    graphHR.getViewport().setMinX(0);
+                    graphHR.getViewport().setMaxX(24);
+
+                    LineGraphSeries<DataPoint> seriesHR = new LineGraphSeries<>();
+                    seriesHR.setThickness(7);
+                    seriesHR.setTitle("Filtered data");
+
+                    seriesHR.setColor(Color.RED);
+                    DataPoint pointsHR;
+
+                    //Get temperature graph data
+                    GraphView graphTemp = (GraphView) getView().findViewById(R.id.graphTemp);
+
+                    graphTemp.setTitle("Temperature (F) by hour");
+
+                    graphTemp.getViewport().setYAxisBoundsManual(true);
+                    graphTemp.getViewport().setMinY(97.0);
+                    graphTemp.getViewport().setMaxY(104.0);
+
+
+                    graphTemp.getViewport().setXAxisBoundsManual(true);
+                    graphTemp.getViewport().setMinX(0);
+                    graphTemp.getViewport().setMaxX(24);
+
+                    LineGraphSeries<DataPoint> seriesTemp = new LineGraphSeries<>();
+                    seriesTemp.setThickness(7);
+                    seriesTemp.setTitle("Filtered data");
+
+                    seriesTemp.setColor(Color.CYAN);
+                    DataPoint pointsTemp;
+
 //                    StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
 //                    staticLabelsFormatter.setHorizontalLabels(new String[]{"12AM", "5AM", "10AM", "5PM", "10PM"});
 //                    graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
@@ -235,12 +319,28 @@ public class Day6Fragment extends Fragment {
 
                             point = new DataPoint(time, snapshot2.child("ris").getValue(Integer.class));
                             series.appendData(point, true, 1440);
+
+                            pointRR = new DataPoint(time, snapshot2.child("rr").getValue(Integer.class));
+                            seriesRR.appendData(pointRR, true, 1440);
+
+                            pointspO2 = new DataPoint(time, snapshot2.child("spO2").getValue(Integer.class));
+                            seriesspO2.appendData(pointspO2, true, 1440);
+
+                            pointsHR = new DataPoint(time, snapshot2.child("hr").getValue(Integer.class));
+                            seriesHR.appendData(pointsHR, true, 1440);
+
+                            pointsTemp = new DataPoint(time, snapshot2.child("temp").getValue(Integer.class));
+                            seriesTemp.appendData(pointsTemp, true, 1440);
                         }
 
 
                     }
 
                     graph.addSeries(series);
+                    graphRR.addSeries(seriesRR);
+                    graphspO2.addSeries(seriesspO2);
+                    graphHR.addSeries(seriesHR);
+                    graphTemp.addSeries(seriesTemp);
 
 
 //                    graph.getLegendRenderer().setVisible(true);

@@ -144,6 +144,10 @@ public class Week6Fragment extends Fragment {
                 double tempSum = 0.0;
                 int count = 0;
                 double[][] risArray = new double[7][7];
+                double[][] RRArray = new double[7][7];
+                double[][] O2Array = new double[7][7];
+                double[][] HRArray = new double[7][7];
+                double[][] TempArray = new double[7][7];
 
 
                 for (DataSnapshot snapshot2 : snapshot.getChildren()) {
@@ -192,10 +196,112 @@ public class Week6Fragment extends Fragment {
                     staticLabelsFormatter.setHorizontalLabels(new String[]{weekToday.getMonthValue() + "/" + weekToday.getDayOfMonth(), weekToday.plusDays(2).getMonthValue() + "/" + weekToday.plusDays(2).getDayOfMonth(), weekToday.plusDays(4).getMonthValue() + "/" + weekToday.plusDays(4).getDayOfMonth(), weekToday.plusDays(6).getMonthValue() + "/" + weekToday.plusDays(6).getDayOfMonth(), "Null"});
                     graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
+//Get RR graph data
+                    GraphView graphRR = (GraphView) getView().findViewById(R.id.graphRR);
+
+                    graphRR.setTitle("RR values by day");
+
+                    graphRR.getViewport().setYAxisBoundsManual(true);
+                    graphRR.getViewport().setMinY(5);
+                    graphRR.getViewport().setMaxY(20);
+
+
+                    graphRR.getViewport().setXAxisBoundsManual(true);
+                    graphRR.getViewport().setMinX(0);
+                    graphRR.getViewport().setMaxX(7);
+
+                    LineGraphSeries<DataPoint> seriesRR = new LineGraphSeries<>();
+                    seriesRR.setThickness(7);
+                    seriesRR.setTitle("Filtered data");
+
+                    seriesRR.setColor(Color.BLUE);
+                    DataPoint pointRR;
+
+                    StaticLabelsFormatter staticLabelsFormatterRR = new StaticLabelsFormatter(graphRR);
+                    staticLabelsFormatterRR.setHorizontalLabels(new String[]{weekToday.getMonthValue() + "/" + weekToday.getDayOfMonth(), weekToday.plusDays(2).getMonthValue() + "/" + weekToday.plusDays(2).getDayOfMonth(), weekToday.plusDays(4).getMonthValue() + "/" + weekToday.plusDays(4).getDayOfMonth(), weekToday.plusDays(6).getMonthValue() + "/" + weekToday.plusDays(6).getDayOfMonth(), "Null"});
+                    graphRR.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatterRR);
+
+                    //Get spO2 graph data
+                    GraphView graphspO2 = (GraphView) getView().findViewById(R.id.graphspO2);
+
+                    graphspO2.setTitle("Oxygen percentage by day");
+
+                    graphspO2.getViewport().setYAxisBoundsManual(true);
+                    graphspO2.getViewport().setMinY(85);
+                    graphspO2.getViewport().setMaxY(100);
+
+
+                    graphspO2.getViewport().setXAxisBoundsManual(true);
+                    graphspO2.getViewport().setMinX(0);
+                    graphspO2.getViewport().setMaxX(7);
+
+                    LineGraphSeries<DataPoint> seriesspO2 = new LineGraphSeries<>();
+                    seriesspO2.setThickness(7);
+                    seriesspO2.setTitle("Filtered data");
+
+                    seriesRR.setColor(Color.MAGENTA);
+                    DataPoint pointspO2;
+
+                    StaticLabelsFormatter staticLabelsFormatterspO2 = new StaticLabelsFormatter(graphspO2);
+                    staticLabelsFormatterspO2.setHorizontalLabels(new String[]{weekToday.getMonthValue() + "/" + weekToday.getDayOfMonth(), weekToday.plusDays(2).getMonthValue() + "/" + weekToday.plusDays(2).getDayOfMonth(), weekToday.plusDays(4).getMonthValue() + "/" + weekToday.plusDays(4).getDayOfMonth(), weekToday.plusDays(6).getMonthValue() + "/" + weekToday.plusDays(6).getDayOfMonth(), "Null"});
+                    graphspO2.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatterspO2);
+
+
+                    //Get HR graph data
+                    GraphView graphHR = (GraphView) getView().findViewById(R.id.graphHR);
+
+                    graphHR.setTitle("Heart rate by day");
+
+                    graphHR.getViewport().setYAxisBoundsManual(true);
+                    graphHR.getViewport().setMinY(50);
+                    graphHR.getViewport().setMaxY(180);
+
+
+                    graphHR.getViewport().setXAxisBoundsManual(true);
+                    graphHR.getViewport().setMinX(0);
+                    graphHR.getViewport().setMaxX(7);
+
+                    LineGraphSeries<DataPoint> seriesHR = new LineGraphSeries<>();
+                    seriesHR.setThickness(7);
+                    seriesHR.setTitle("Filtered data");
+
+                    seriesHR.setColor(Color.RED);
+                    DataPoint pointsHR;
+
+                    StaticLabelsFormatter staticLabelsFormatterHR = new StaticLabelsFormatter(graphHR);
+                    staticLabelsFormatterHR.setHorizontalLabels(new String[]{weekToday.getMonthValue() + "/" + weekToday.getDayOfMonth(), weekToday.plusDays(2).getMonthValue() + "/" + weekToday.plusDays(2).getDayOfMonth(), weekToday.plusDays(4).getMonthValue() + "/" + weekToday.plusDays(4).getDayOfMonth(), weekToday.plusDays(6).getMonthValue() + "/" + weekToday.plusDays(6).getDayOfMonth(), "Null"});
+                    graphHR.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatterHR);
+
+                    //Get temperature graph data
+                    GraphView graphTemp = (GraphView) getView().findViewById(R.id.graphTemp);
+
+                    graphTemp.setTitle("Temperature (F) by hour");
+
+                    graphTemp.getViewport().setYAxisBoundsManual(true);
+                    graphTemp.getViewport().setMinY(97.0);
+                    graphTemp.getViewport().setMaxY(104.0);
+
+
+                    graphTemp.getViewport().setXAxisBoundsManual(true);
+                    graphTemp.getViewport().setMinX(0);
+                    graphTemp.getViewport().setMaxX(7);
+
+                    LineGraphSeries<DataPoint> seriesTemp = new LineGraphSeries<>();
+                    seriesTemp.setThickness(7);
+                    seriesTemp.setTitle("Filtered data");
+
+                    seriesTemp.setColor(Color.CYAN);
+                    DataPoint pointsTemp;
+
+                    StaticLabelsFormatter staticLabelsFormatterTemp = new StaticLabelsFormatter(graphTemp);
+                    staticLabelsFormatterTemp.setHorizontalLabels(new String[]{weekToday.getMonthValue() + "/" + weekToday.getDayOfMonth(), weekToday.plusDays(2).getMonthValue() + "/" + weekToday.plusDays(2).getDayOfMonth(), weekToday.plusDays(4).getMonthValue() + "/" + weekToday.plusDays(4).getDayOfMonth(), weekToday.plusDays(6).getMonthValue() + "/" + weekToday.plusDays(6).getDayOfMonth(), "Null"});
+                    graphTemp.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatterTemp);
+
 
                     LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
                     series.setTitle("Filtered data");
                     series.setColor(Color.GREEN);
+                    series.setThickness(7);
                     DataPoint point;
                     LocalDateTime lt;
                     DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
@@ -227,15 +333,24 @@ public class Week6Fragment extends Fragment {
                         for (int i = 0; i < 7; i++) {
                             if (now.equals(today.minusDays(i))) {
                                 risArray[i][0] = risArray[i][0] + snapshot2.child("ris").getValue(Integer.class);
+                                RRArray[i][0] = RRArray[i][0] + snapshot2.child("rr").getValue(Integer.class);
+                                O2Array[i][0] = O2Array[i][0] + snapshot2.child("spO2").getValue(Integer.class);
+                                HRArray[i][0] = HRArray[i][0] + snapshot2.child("hr").getValue(Integer.class);
+                                TempArray[i][0] = TempArray[i][0] + snapshot2.child("temp").getValue(Integer.class);
 
                                 risArray[i][1]++;
-
+                                RRArray[i][1]++;
+                                O2Array[i][1]++;
+                                HRArray[i][1]++;
+                                TempArray[i][1]++;
+                                Log.d(TAG, "onDataChange: Day is " + now.getMonth() + " " + now.getDayOfMonth());
 //                            point = new DataPoint(time, snapshot2.child("ris").getValue(Integer.class));
 //                            series.appendData(point, true, 1440);
                             }
 
 
                         }
+
 
 
 //
@@ -245,16 +360,29 @@ public class Week6Fragment extends Fragment {
 //                    graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
                     }
                     int counter = 0;
-                    for (int i = 6; i > 0; i--) {
+                    for(int i=6; i>0; i--){
 
-                        point = new DataPoint(counter, risArray[i][0] / risArray[i][1]);
+                        point = new DataPoint(counter, risArray[i][0]/risArray[i][1]);
+                        pointRR = new DataPoint(counter, RRArray[i][0] / RRArray[i][1]);
+                        pointspO2 = new DataPoint(counter, O2Array[i][0] / O2Array[i][1]);
+                        pointsHR = new DataPoint(counter, HRArray[i][0] / HRArray[i][1]);
+                        pointsTemp = new DataPoint(counter, TempArray[i][0] / TempArray[i][1]);
+
                         series.appendData(point, true, 1440);
-                        Log.d(TAG, "onDataChange: dumb " + i);
+                        seriesRR.appendData(pointRR, true, 1440);
+                        seriesspO2.appendData(pointspO2, true, 1440);
+                        seriesHR.appendData(pointsHR, true, 1440);
+                        seriesTemp.appendData(pointsTemp, true, 1440);
+                        Log.d(TAG, "onDataChange: dumb " + risArray[i][0] + ":" + risArray[i][1] + " FROM! " + i);
                         counter++;
 
                     }
 
                     graph.addSeries(series);
+                    graphRR.addSeries(seriesRR);
+                    graphspO2.addSeries(seriesspO2);
+                    graphHR.addSeries(seriesHR);
+                    graphTemp.addSeries(seriesTemp);
                     Log.d(TAG, "risArray Day 1 sum: " + risArray[0][0]);
                     Log.d(TAG, "risArray Day 1 count: " + risArray[0][1]);
                     Log.d(TAG, "risArray Day 2 sum: " + risArray[1][0]);

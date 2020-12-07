@@ -141,6 +141,10 @@ public class Month7Fragment extends Fragment {
                 double tempSum = 0.0;
                 int count = 0;
                 double[][] risArray = new double[7][7];
+                double[][] RRArray = new double[7][7];
+                double[][] O2Array = new double[7][7];
+                double[][] HRArray = new double[7][7];
+                double[][] TempArray = new double[7][7];
                 LocalDate curMonth = LocalDate.of(currentDate.minusMonths(6).getYear(), currentDate.minusMonths(6).getMonth(), 1);
                 LocalDate rollingMonth;
                 LocalDate weekToday;
@@ -171,8 +175,17 @@ public class Month7Fragment extends Fragment {
 
                             if (rollingMonth.compareTo(now) <= 0 && now.compareTo(weekToday) < 0) {
                                 risArray[i][0] = risArray[i][0] + snapshot2.child("ris").getValue(Integer.class);
+                                RRArray[i][0] = RRArray[i][0] + snapshot2.child("rr").getValue(Integer.class);
+                                O2Array[i][0] = O2Array[i][0] + snapshot2.child("spO2").getValue(Integer.class);
+                                HRArray[i][0] = HRArray[i][0] + snapshot2.child("hr").getValue(Integer.class);
+                                TempArray[i][0] = TempArray[i][0] + snapshot2.child("temp").getValue(Integer.class);
                                 Log.d(TAG, "onDataChange: Yeehaw " + rollingMonth.getDayOfMonth() + " " + now.getMonthValue() + "/" + now.getDayOfMonth());
                                 risArray[i][1]++;
+                                RRArray[i][1]++;
+                                O2Array[i][1]++;
+                                HRArray[i][1]++;
+                                TempArray[i][1]++;
+
 
 
 //                            point = new DataPoint(time, snapshot2.child("ris").getValue(Integer.class));
@@ -207,6 +220,90 @@ public class Month7Fragment extends Fragment {
                     graph.getViewport().setXAxisBoundsManual(true);
                     graph.getViewport().setMinX(0);
                     graph.getViewport().setMaxX(4);
+
+                    //Get RR graph data
+                    GraphView graphRR = (GraphView) getView().findViewById(R.id.graphRR);
+
+                    graphRR.setTitle("RR values by week");
+
+                    graphRR.getViewport().setYAxisBoundsManual(true);
+                    graphRR.getViewport().setMinY(5);
+                    graphRR.getViewport().setMaxY(20);
+
+
+                    graphRR.getViewport().setXAxisBoundsManual(true);
+                    graphRR.getViewport().setMinX(0);
+                    graphRR.getViewport().setMaxX(4);
+
+                    LineGraphSeries<DataPoint> seriesRR = new LineGraphSeries<>();
+                    seriesRR.setThickness(7);
+                    seriesRR.setTitle("Filtered data");
+
+                    seriesRR.setColor(Color.BLUE);
+                    DataPoint pointRR;
+
+                    //Get spO2 graph data
+                    GraphView graphspO2 = (GraphView) getView().findViewById(R.id.graphspO2);
+
+                    graphspO2.setTitle("Oxygen percentage by week");
+
+                    graphspO2.getViewport().setYAxisBoundsManual(true);
+                    graphspO2.getViewport().setMinY(85);
+                    graphspO2.getViewport().setMaxY(100);
+
+
+                    graphspO2.getViewport().setXAxisBoundsManual(true);
+                    graphspO2.getViewport().setMinX(0);
+                    graphspO2.getViewport().setMaxX(4);
+
+                    LineGraphSeries<DataPoint> seriesspO2 = new LineGraphSeries<>();
+                    seriesspO2.setThickness(7);
+                    seriesspO2.setTitle("Filtered data");
+
+                    seriesRR.setColor(Color.MAGENTA);
+                    DataPoint pointspO2;
+
+                    //Get HR graph data
+                    GraphView graphHR = (GraphView) getView().findViewById(R.id.graphHR);
+
+                    graphHR.setTitle("Heart rate by week");
+
+                    graphHR.getViewport().setYAxisBoundsManual(true);
+                    graphHR.getViewport().setMinY(50);
+                    graphHR.getViewport().setMaxY(180);
+
+
+                    graphHR.getViewport().setXAxisBoundsManual(true);
+                    graphHR.getViewport().setMinX(0);
+                    graphHR.getViewport().setMaxX(4);
+
+                    LineGraphSeries<DataPoint> seriesHR = new LineGraphSeries<>();
+                    seriesHR.setThickness(7);
+                    seriesHR.setTitle("Filtered data");
+
+                    seriesHR.setColor(Color.RED);
+                    DataPoint pointsHR;
+
+                    //Get temperature graph data
+                    GraphView graphTemp = (GraphView) getView().findViewById(R.id.graphTemp);
+
+                    graphTemp.setTitle("Temperature (F) by hour");
+
+                    graphTemp.getViewport().setYAxisBoundsManual(true);
+                    graphTemp.getViewport().setMinY(97.0);
+                    graphTemp.getViewport().setMaxY(104.0);
+
+
+                    graphTemp.getViewport().setXAxisBoundsManual(true);
+                    graphTemp.getViewport().setMinX(0);
+                    graphTemp.getViewport().setMaxX(4);
+
+                    LineGraphSeries<DataPoint> seriesTemp = new LineGraphSeries<>();
+                    seriesTemp.setThickness(7);
+                    seriesTemp.setTitle("Filtered data");
+
+                    seriesTemp.setColor(Color.CYAN);
+                    DataPoint pointsTemp;
 //
 //                    StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
 //                    staticLabelsFormatter.setHorizontalLabels(new String[]{weekToday.getMonthValue() + "/" + weekToday.getDayOfMonth(), weekToday.plusDays(2).getMonthValue() + "/" + weekToday.plusDays(2).getDayOfMonth(), weekToday.plusDays(4).getMonthValue() + "/" + weekToday.plusDays(4).getDayOfMonth(), weekToday.plusDays(6).getMonthValue() + "/" + weekToday.plusDays(6).getDayOfMonth(), "Null"});
@@ -215,6 +312,7 @@ public class Month7Fragment extends Fragment {
 
                     LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
                     series.setTitle("Filtered data");
+                    series.setThickness(7);
                     series.setColor(Color.GREEN);
                     DataPoint point;
                     LocalDateTime lt;
@@ -249,9 +347,16 @@ public class Month7Fragment extends Fragment {
                         Log.d(TAG, "onDataChange: dumb " + counter + " " + risArray[i][1]);
                         if (risArray[i][1] > 0) {
                             point = new DataPoint(counter, risArray[i][0] / risArray[i][1]);
-
+                            pointRR = new DataPoint(counter, RRArray[i][0] / RRArray[i][1]);
+                            pointspO2 = new DataPoint(counter, O2Array[i][0] / O2Array[i][1]);
+                            pointsHR = new DataPoint(counter, HRArray[i][0] / HRArray[i][1]);
+                            pointsTemp = new DataPoint(counter, TempArray[i][0] / TempArray[i][1]);
 
                             series.appendData(point, true, 1440);
+                            seriesRR.appendData(pointRR, true, 1440);
+                            seriesspO2.appendData(pointspO2, true, 1440);
+                            seriesHR.appendData(pointsHR, true, 1440);
+                            seriesTemp.appendData(pointsTemp, true, 1440);
                         }
 
                         counter++;
@@ -259,6 +364,10 @@ public class Month7Fragment extends Fragment {
                     }
 
                     graph.addSeries(series);
+                    graphRR.addSeries(seriesRR);
+                    graphspO2.addSeries(seriesspO2);
+                    graphHR.addSeries(seriesHR);
+                    graphTemp.addSeries(seriesTemp);
                     Log.d(TAG, "risArray Week 1 sum: " + risArray[0][0]);
                     Log.d(TAG, "risArray Week 1 count: " + risArray[0][1]);
                     Log.d(TAG, "risArray Week 2 sum: " + risArray[1][0]);
