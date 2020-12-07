@@ -55,6 +55,7 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.w2njl.VillanovaCovid19.CovidService;
 import com.w2njl.VillanovaCovid19.LoginActivity;
 import com.w2njl.VillanovaCovid19.R;
+import com.w2njl.VillanovaCovid19.data.LoginDataSource;
 
 import org.apache.commons.math3.util.Precision;
 
@@ -112,6 +113,10 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
     public static ProgressBar progressBar;
     private int progressStatus = 0;
     private Handler handler = new Handler();
+
+
+    Boolean anotherBoolean = false;
+
 
 
 
@@ -349,7 +354,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
     }
 
     private void initCrush() {
-
+        Log.d(TAG, "initCrush: Here");
        sum=0;
        reff.addValueEventListener(new ValueEventListener() {
                                       @Override
@@ -560,6 +565,8 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
         else
             realSeconds = "" + seconds;
 
+        txtRR.setVisibility(View.VISIBLE);
+        txtRIS.setVisibility(View.VISIBLE);
         txtRIS.setText(String.valueOf(covid.getRIS()));
         txtHR.setText(String.valueOf(covid.getHR()) + " bpm");
         init = true;
@@ -739,8 +746,10 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
 
                     patient1.getCurrentTime();
 
-                    if(lastRIS != RIS){
-                    setData(patient1);}
+                    if(lastRIS != RIS || !anotherBoolean){
+                    setData(patient1);
+
+                    }
 
 
                     if(running && finished && RIS != lastRIS){
@@ -748,7 +757,8 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
                         txtProgress.setVisibility(View.GONE);
                         txtRisk.setVisibility(View.VISIBLE);
                         myCustomSnackbar(patient1);
-                    lastRIS = RIS; }
+                    lastRIS = RIS;
+                        }
                     else
                     if(running && !suppressed) {
                         myCustomSnackbar2();
@@ -765,97 +775,13 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
                 lastQuery.removeEventListener(this);
             }
         });
-//
-//        lastQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot child: dataSnapshot.getChildren()) {
-//                    int HR = child.child("hr").getValue(Integer.class);
-//                    double temp = child.child("temp").getValue(Double.class);
-//                    int spO2 = child.child("spO2").getValue(Integer.class);
-//                    int TV = child.child("tv").getValue(Integer.class);
-//                    int RR = child.child("rr").getValue(Integer.class);
-//                    Log.d(TAG, "User key" + child.getKey());
-//                    Log.d(TAG, "onDataChange HR: " + HR);
-//
-//
-//                    temp = Precision.round(temp, 1);
-//                    int RIS = child.child("ris").getValue(Integer.class);
-//
-//                    Log.d(TAG, "onDataChange RIS: " + getDanger(RIS));
-//                    String date = child.child("currentTime").getValue().toString();
-//
-//
-//           patient1 = new CovidFeatures(getDanger(RIS), 1, RIS, HR, spO2, temp,
-//                        TV, RR, date);
-//
-//                    setData(patient1);
-//
-                   initCrush();
-//
-//                    myCustomSnackbar(patient1);
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                // Handle possible errors.
-//            }
-//        });
-
-//        if(futureTaskRunning){
-//        changeReadInterval(60);}
-
-//        patient1.setRIS(66);
-//        patient1.setDanger(getDanger(RIS));
-//        patient1.setId(1);
-//        patient1.setHR(HR);
-//        patient1.setSpO2(spO2);
-//        patient1.setTemp(temp);
-//        patient1.setTV(TV);
-//        patient1.setRR(RR);
-//        patient1.setCurrentTime(date);
 
 
-//        covids.add(new CovidFeatures(getDanger(RIS), 1, RIS, HR, spO2, temp,
-//                TV, RR, date));
+        if(firstRun || !anotherBoolean){
+          initCrush();
+            anotherBoolean = true;}
 
 
-//
-//        reff.push().setValue(patient1);
-
-//        CovidFeatures j = new CovidFeatures(getDanger(RIS), 1, RIS, HR, spO2, temp,
-//                TV, RR);
-//
-//        reff = FirebaseDatabase.getInstance().getReference().child("Patient");
-//        reff.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                if(snapshot.exists()){
-//                    maxid=(snapshot.getChildrenCount());
-//
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-
-
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-////        reff.child(String.valueOf(maxid+1)).setValue(j);
-//        Gson gson = new Gson();
-//        editor.putString(PATIENT_KEY, gson.toJson(covids));
-//        editor.commit();
-
-
-
-
-//        risImage = findViewById(R.id.RISImage);
     }
 
     private int getMVrisk(int RR, int TV) {
@@ -1098,17 +1024,24 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void startService(View v) throws InterruptedException {
 
-//        GraphView graph = (GraphView) findViewById(R.id.graph);
-
+       GraphView graph = (GraphView) findViewById(R.id.graph);
+        graph.removeAllSeries();
+        graph.getLegendRenderer().setVisible(false);
 
                 startService(mIntent);
-//        graph.removeAllSeries();
+
 
         exec = Executors.newSingleThreadScheduledExecutor();         exec.scheduleAtFixedRate(() -> {             initViews();      }, 1, 10, TimeUnit.SECONDS);
 
         progressStatus = 0;
         progressBar.setProgress(0);
         txtTimeStamp.setText(R.string.bluetooth);
+        txtRR.setVisibility(View.GONE);
+        txtRIS.setVisibility(View.GONE);
+        txtHR.setText(R.string.loading);
+        txtSpO2.setText(R.string.loading);
+        txtTV.setText(R.string.loading);
+        txtTemp.setText(R.string.loading);
         txtRisk.setVisibility(View.GONE);
 progressBar.setVisibility(View.VISIBLE);
 txtProgress.setVisibility(View.VISIBLE);
@@ -1122,6 +1055,9 @@ txtProgress.setVisibility(View.VISIBLE);
                         public void run() {
                             progressBar.setProgress(progressStatus);
                             txtProgress.setText(progressStatus+"%");
+
+                            if(progressStatus == 100)
+                                txtTimeStamp.setText(R.string.shorrparks);
                         }
                     });
                     try {
