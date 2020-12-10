@@ -55,6 +55,7 @@ public class Week3Fragment extends Fragment {
     TextView risTableData, tempTableData, O2TableData, RRTableData, TVTableData, HRTableData, risHeader;
     LocalDate currentDate;
 
+
     public Week3Fragment() {
         // Required empty public constructor
     }
@@ -128,7 +129,7 @@ public class Week3Fragment extends Fragment {
     private void initDB() {
         reff = FirebaseDatabase.getInstance().getReference().child("Patient");
 
-        reff.addValueEventListener(new ValueEventListener() {
+        reff.addListenerForSingleValueEvent(new ValueEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -171,6 +172,7 @@ public class Week3Fragment extends Fragment {
                 if (count == 0) {
 
                     Toast.makeText(getActivity().getBaseContext(), "There is no data available for this week", Toast.LENGTH_SHORT).show();
+
                 } else {
                     risTableData.setText(String.valueOf(risSum / count));
                     tempTableData.setText(String.valueOf(Precision.round(tempSum / count, 1)) + "°F");

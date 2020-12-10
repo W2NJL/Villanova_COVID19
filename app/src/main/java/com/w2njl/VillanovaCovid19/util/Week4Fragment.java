@@ -129,7 +129,7 @@ public class Week4Fragment extends Fragment {
     private void initDB() {
         reff = FirebaseDatabase.getInstance().getReference().child("Patient");
 
-        reff.addValueEventListener(new ValueEventListener() {
+        reff.addListenerForSingleValueEvent(new ValueEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

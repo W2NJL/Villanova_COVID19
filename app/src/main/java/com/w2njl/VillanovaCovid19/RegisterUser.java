@@ -43,7 +43,7 @@ public class RegisterUser extends AppCompatActivity{
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setTheme(R.style.BlueTheme);
+
         setContentView(R.layout.activity_register_user);
 //        ((AdView) findViewById(R.id.adView)).loadAd(new AdRequest.Builder().build());
 

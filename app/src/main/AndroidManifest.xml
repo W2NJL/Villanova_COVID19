@@ -30,9 +30,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".util.ForgotPassword" />
-        <activity android:name=".util.UserProfile" />
-        <activity android:name=".RegisterUser" />
+        <activity android:name=".util.ForgotPassword"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".util.UserProfile"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".RegisterUser"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>

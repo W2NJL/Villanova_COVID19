@@ -273,8 +273,8 @@ public class DayFragment extends Fragment {
                     graphTemp.setTitle("Temperature (F) by hour");
 
                     graphTemp.getViewport().setYAxisBoundsManual(true);
-                    graphTemp.getViewport().setMinY(97.0);
-                    graphTemp.getViewport().setMaxY(104.0);
+                    graphTemp.getViewport().setMinY(96.0);
+                    graphTemp.getViewport().setMaxY(103.0);
 
 
                     graphTemp.getViewport().setXAxisBoundsManual(true);

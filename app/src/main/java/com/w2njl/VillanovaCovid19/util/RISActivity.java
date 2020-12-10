@@ -94,9 +94,9 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
     private TextView txtRIS, txtHR, txtSpO2, txtTemp, txtTV, txtRR, txtRisk, txtTimeStamp, txtProgress;
     private Button btnGraph, btnShare, btnArchive, btnMonitoring;
     boolean suppressed = false;
-    int lastRIS;
+    private int lastRIS;
     boolean hasShown = false;
-    String lastDate;
+    private String lastDate = null;
     
     Toolbar toolbar;
     public static DatabaseReference reff = null;
@@ -115,7 +115,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
     private Handler handler = new Handler();
 
 
-    Boolean anotherBoolean = false;
+    private Boolean anotherBoolean = false;
 
 
 
@@ -139,7 +139,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
         getWindow().setExitTransition(new Slide());
 
         setContentView(R.layout.activity_r_i_s);
-
+        anotherBoolean = false;
         txtRIS = findViewById(R.id.txtRIS);
         txtHR = findViewById(R.id.txtHR2);
         txtSpO2 = findViewById(R.id.txtSp02Level);
@@ -355,6 +355,9 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
 
     private void initCrush() {
         Log.d(TAG, "initCrush: Here");
+
+        if(firstRun || !anotherBoolean){
+            anotherBoolean = true;
        sum=0;
        reff.addValueEventListener(new ValueEventListener() {
                                       @Override
@@ -435,7 +438,9 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
                                       public void onCancelled(@NonNull DatabaseError error) {
                                           reff.removeEventListener(this);
                                       }
-                                  });
+                                  });}
+        else
+            return;
 
 //
 //        reff.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -697,6 +702,7 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
         SharedPreferences sharedPreferences = null;
         ArrayList<CovidFeatures> covids = new ArrayList<>();
         lastRIS = Integer.parseInt(txtRIS.getText().toString());
+        lastDate = patient1.getCurrentTime();
 
 //        Random random = new Random();
 //        int HR2;
@@ -746,21 +752,26 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
 
                     patient1.getCurrentTime();
 
-                    if(lastRIS != RIS || !anotherBoolean){
+                    Log.d(TAG, "onDataChange: anotherboolean " + anotherBoolean);
+
+                    if(lastDate != date || !anotherBoolean){
                     setData(patient1);
+                        initCrush();
 
                     }
 
 
-                    if(running && finished && RIS != lastRIS){
+                    if(running && finished && lastDate != date){
                         progressBar.setVisibility(View.GONE);
                         txtProgress.setVisibility(View.GONE);
                         txtRisk.setVisibility(View.VISIBLE);
                         myCustomSnackbar(patient1);
-                    lastRIS = RIS;
+                    lastDate = date;
+                        Log.d(TAG, "onDataChange: last mall " + lastDate);
+
                         }
                     else
-                    if(running && !suppressed) {
+                    if(running && !suppressed && !firstRun) {
                         myCustomSnackbar2();
                         suppressed = true;
                     }
@@ -777,9 +788,9 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
         });
 
 
-        if(firstRun || !anotherBoolean){
-          initCrush();
-            anotherBoolean = true;}
+
+
+
 
 
     }
@@ -1056,7 +1067,7 @@ txtProgress.setVisibility(View.VISIBLE);
                             progressBar.setProgress(progressStatus);
                             txtProgress.setText(progressStatus+"%");
 
-                            if(progressStatus == 100)
+                            if(progressStatus >= 95 )
                                 txtTimeStamp.setText(R.string.shorrparks);
                         }
                     });
@@ -1076,6 +1087,7 @@ txtProgress.setVisibility(View.VISIBLE);
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onResume() {
+
         if (!running) {
             myCustomSnackbar3();
             btnMonitoring.setText(R.string.startmonitoring);
@@ -1084,7 +1096,7 @@ txtProgress.setVisibility(View.VISIBLE);
             initDB();
             initViews();
         } else {
-
+            myCustomSnackbar(patient1);
             btnMonitoring.setText(R.string.stopmonitoring);
             btnMonitoring.setTag(0);
             Date date = new Date();
@@ -1122,6 +1134,7 @@ txtProgress.setVisibility(View.VISIBLE);
         if(exec !=null){
             if(!exec.isShutdown())
         exec.shutdownNow();}
+
         super.onPause();
     }
 
