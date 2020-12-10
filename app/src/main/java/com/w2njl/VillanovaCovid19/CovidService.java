@@ -150,7 +150,7 @@ public class CovidService extends Service {
                 // TODO: Implement this method
                 while(running)
                 {
-
+                    finished = false;
                     generateCovid();
 
                     Log.d(TAG, "Job finished");

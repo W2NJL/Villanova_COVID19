@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -30,6 +31,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -594,12 +597,86 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
 
         txtSpO2.setText(String.valueOf(covid.getSpO2()) + "%");
 
+        if(covid.getRIS() >= 0)
+        {
+            getMax(getO2risk(patient1.getSpO2()), getHRrisk(patient1.getHR()), getTempRisk(patient1.getTemp()), getMVrisk(patient1.getRR(), patient1.getTV()));
+        }
+        else {
+            txtHR.setTextColor(Color.BLACK);
+            txtSpO2.setTextColor(Color.BLACK);
+            txtTemp.setTextColor(Color.BLACK);
+            txtTV.setTextColor(Color.BLACK);
+        }
+
 //        Glide.with(this)
 //                .asBitmap().load(book.getImageUrl())
 //                .into(bookImage);
 
 
     }
+
+    private void getMax(int... vals) {
+        int max = Integer.MIN_VALUE;
+        int count = 0;
+        int maxCount = 0;
+
+        for (int d : vals) {
+            count++;
+            if (d > max){ max = d;
+                maxCount = count;}
+        }
+
+        if (maxCount == 1){
+            txtSpO2.setTextColor(Color.RED);
+            txtHR.setTextColor(Color.BLACK);
+            txtTemp.setTextColor(Color.BLACK);
+            txtTV.setTextColor(Color.BLACK);
+            Animation anim = new AlphaAnimation(0.0f, 1.0f);
+            anim.setDuration(50); //You can manage the blinking time with this parameter
+            anim.setStartOffset(20);
+            anim.setRepeatCount(30);
+            anim.setRepeatMode(Animation.REVERSE);
+           txtSpO2.startAnimation(anim);
+
+        }
+        else if (maxCount == 2){
+            txtHR.setTextColor(Color.RED);
+            Animation anim = new AlphaAnimation(0.0f, 1.0f);
+            anim.setDuration(50); //You can manage the blinking time with this parameter
+            anim.setStartOffset(20);
+            anim.setRepeatCount(30);
+            anim.setRepeatMode(Animation.REVERSE);
+            txtHR.startAnimation(anim);
+            txtSpO2.setTextColor(Color.BLACK);
+            txtTemp.setTextColor(Color.BLACK);
+            txtTV.setTextColor(Color.BLACK);
+        }
+        else if (maxCount == 3){
+            txtTemp.setTextColor(Color.RED);
+            Animation anim = new AlphaAnimation(0.0f, 1.0f);
+            anim.setDuration(50); //You can manage the blinking time with this parameter
+            anim.setStartOffset(20);
+            anim.setRepeatCount(30);
+            anim.setRepeatMode(Animation.REVERSE);
+            txtTemp.startAnimation(anim);
+            txtSpO2.setTextColor(Color.BLACK);
+            txtHR.setTextColor(Color.BLACK);
+            txtTV.setTextColor(Color.BLACK);
+        }
+        else {
+            txtTV.setTextColor(Color.RED);
+            Animation anim = new AlphaAnimation(0.0f, 1.0f);
+            anim.setDuration(50); //You can manage the blinking time with this parameter
+            anim.setStartOffset(20);
+            anim.setRepeatCount(30);
+            anim.setRepeatMode(Animation.REVERSE);
+            txtTV.startAnimation(anim);
+            txtSpO2.setTextColor(Color.BLACK);
+            txtTemp.setTextColor(Color.BLACK);
+            txtHR.setTextColor(Color.BLACK);
+        }
+    }
+
 
     private void setDangerColor(TextView txtRisk, CovidFeatures covid) {
 
@@ -1049,6 +1126,10 @@ public class RISActivity extends AppCompatActivity implements PopupMenu.OnMenuIt
         txtTimeStamp.setText(R.string.bluetooth);
         txtRR.setVisibility(View.GONE);
         txtRIS.setVisibility(View.GONE);
+        txtRIS.setTextColor(Color.BLACK);
+        txtSpO2.setTextColor(Color.BLACK);
+        txtTemp.setTextColor(Color.BLACK);
+        txtTV.setTextColor(Color.BLACK);
         txtHR.setText(R.string.loading);
         txtSpO2.setText(R.string.loading);
         txtTV.setText(R.string.loading);
@@ -1067,7 +1148,7 @@ txtProgress.setVisibility(View.VISIBLE);
                             progressBar.setProgress(progressStatus);
                             txtProgress.setText(progressStatus+"%");
 
-                            if(progressStatus >= 95 )
+                            if(progressStatus >= 95 && !finished )
                                 txtTimeStamp.setText(R.string.shorrparks);
                         }
                     });

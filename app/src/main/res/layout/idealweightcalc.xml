@@ -113,7 +113,7 @@
                                 android:layout_marginStart="10dp"
                                 android:ems="10"
                                 android:gravity="start"
-                                android:hint="@string/enter_value"
+                                android:hint="Enter your age"
                                 android:inputType="number"
                                 android:textColor="@color/txt_black"
                                 android:textColorHint="@color/txt_black"
@@ -397,10 +397,4 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/adview_height"
-        app:adSize="SMART_BANNER"
-        app:adUnitId="@string/banner_ad_id" />
 </LinearLayout>

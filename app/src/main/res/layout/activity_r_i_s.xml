@@ -107,6 +107,7 @@
 
                     <TextView
                         android:id="@+id/txtHR2"
+                        android:textColor="@color/txt_black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="188dp"
@@ -117,6 +118,7 @@
 
                     <TextView
                         android:id="@+id/txtTempValue"
+                        android:textColor="@color/txt_black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="188dp"
@@ -276,6 +278,7 @@
 
                     <TextView
                         android:id="@+id/txtSp02Level"
+                        android:textColor="@color/txt_black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="68dp"
@@ -286,6 +289,7 @@
 
                     <TextView
                         android:id="@+id/txtTV"
+                        android:textColor="@color/txt_black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="40dp"
@@ -296,6 +300,7 @@
 
                     <TextView
                         android:id="@+id/txtRR"
+                        android:textColor="@color/txt_black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="40dp"
@@ -337,6 +342,7 @@
 
                     <TextView
                         android:id="@+id/txtRIS"
+                        android:textColor="@color/txt_black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="32dp"
@@ -357,6 +363,7 @@
 
                     <TextView
                         android:id="@+id/txtDanger"
+                        android:textColor="@color/txt_black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="88dp"

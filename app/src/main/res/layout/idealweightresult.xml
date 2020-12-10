@@ -105,10 +105,5 @@
         </LinearLayout>
     </LinearLayout>
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/adview_height"
-        app:adSize="SMART_BANNER"
-        app:adUnitId="@string/banner_ad_id" />
+
 </LinearLayout>

@@ -32,7 +32,7 @@ public class IdealWeightResult extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setTheme(R.style.OrangeTheme);
         setContentView(R.layout.idealweightresult);
-        ((AdView) findViewById(R.id.adView)).loadAd(new Builder().build());
+
         init();
         ImageView imageView = findViewById(R.id.ivRotate);
         this.rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);

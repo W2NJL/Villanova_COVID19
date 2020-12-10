@@ -124,7 +124,7 @@ public class IdealWeightCalc extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setTheme(R.style.OrangeTheme);
         setContentView(R.layout.idealweightcalc);
-        ((AdView) findViewById(R.id.adView)).loadAd(new Builder().build());
+
         String[] strArr = {getResources().getString(R.string.male), getResources().getString(R.string.female)};
         String[] strArr2 = {getResources().getString(R.string.centimeters), getResources().getString(R.string.feets)};
         findViewById(R.id.chart).setOnClickListener(new OnClickListener() {
